@@ -221,11 +221,11 @@ function showDebugContent() {
 
 <%
 
-' /--- Security block: ------------------------------------------
+' /--- Maintenance block ----------------------------------
 '  check visitor ip and make actions based on this, as example there is block which can be uncommented in case of maintenance on server
 Dim g_clientIP  
 	g_clientIP = Request.Servervariables("REMOTE_ADDR") 
-	'if g_clientIP<>"localhost" and g_clientIP<>"10.101.1.53" then 
+	'if g_clientIP<>"localhost" and g_clientIP<>"192.168.1.1" then 
 	'	response.write "Dear User, <br>Site temporary unavailable for maintenance purposes.<br>Have a nice day." & g_ClientIP
 	'	response.end
 	'end if
