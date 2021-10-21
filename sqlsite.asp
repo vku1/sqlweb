@@ -264,10 +264,8 @@ dim g_MENU ' global variable for menu.
 ' [Page_Name_with_submenu_items]:{First_submenu_item_name}:page_code_of_first_submenu:{Second_submenu_item_name}:page_code_of_second_submenu;
 	g_MENU = ""
 	g_MENU = g_MENU & "(Home):1;"
-	
 	g_MENU = g_MENU & "[Statistics]:1:{Years}:2:{Departments}:3:{Monthly by the department}:4:{Purchase orders};"
 	g_MENU = g_MENU & "[Chinook]:5:{Artists}:6:{Albums};"
-	
 ' \ ------------------
 
 ' /-----INPUT Fields -------------
@@ -278,11 +276,11 @@ dim g_use_html5_fields_for_input ' YES/NO '<input type='date|number|text|...'
 	g_use_html5_fields_for_input = "YES" 
 ' \-------------------	
 
-
-' /--- Maximal number of records on page --------------------	
-' Pagination added automaticaly
-dim g_page_records_count ' count of records in html table for viewing  (pagination block added automaticaly). For each separate page You can set its own count of visible records by using this variable in "page CASE block" 
-	g_page_records_count = 8 
+' /--- Maximum number of records on page --------------------	
+' Pagination added automaticaly count of records in html table for viewing (pagination block added automaticaly). 
+' For each separate page You can set its own count of visible records by using this variable in "page CASE block" 
+dim g_page_records_count 
+	g_page_records_count = 20 
 ' \-------------------------------
 
 ' /--- Connection string CODE stored in file global.asa for datasource --------------------	
@@ -296,7 +294,7 @@ dim g_page_datasource ' value of this variable is connection string to datasaour
 ' \-------------------------------
 
 ' /---- Brackets for columns with spaces ----------------
-' These parameters depend on the type of Database that You will use.
+' These parameters depend on the type of Database that You use
 ' They mean the generally accepted characters in which the columns enclose, in the name of which there are spaces.
 ' For SQL Server if column contain space in it's name the column will looks like [my column name]. Where start bracket is "[", and end bracket is "]".
 ' For Oracle "my column name"
