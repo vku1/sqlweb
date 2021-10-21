@@ -1,0 +1,24 @@
+<script language="vbscript" runat="server">
+
+Sub Application_OnStart
+	
+End Sub
+
+Sub Session_OnStart
+	Application.Lock
+	Session.Timeout = 20
+	Application("my_data_cource_1")= "Provider=SQLNCLI;server=l92.168.1.1\SQLEXPRESS;database=test_sqlweb_db;uid=my_user;pwd=my_password"
+	Application("sqlweb")          = "Provider=SQLNCLI;server=l92.168.1.1\SQLEXPRESS;database=test_sqlweb_db;uid=my_user;pwd=my_password"
+	Application("Chinook")         = "Provider=SQLNCLI;server=192.168.1.1\SQLEXPRESS;database=Chinook;uid=my_user;pwd=my_password"
+	Application.UnLock
+End Sub
+
+Sub Session_OnEnd
+	Application.Lock
+	Application("my_data_cource_1")=""
+	Application("sqlweb")          =""
+	Application("Chinook")         =""
+	Application.UnLock
+End Sub
+
+</script>
