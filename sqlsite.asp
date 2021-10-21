@@ -7,7 +7,7 @@
 	<meta name="description" content="Single page website based only on SQL queries and asp variables">
 	<meta name="keywords" content="single page application, spa, sql, iis, asp, database frontend, front-end, web frontend">
 	<meta name="author" content="vku1">
-	<meta name="home page" content="https://github.com/vku1">
+	<meta name="home page" content="https://github.com/vku1/sqlweb">
 <% 
 
 	' Adjusting Notepad++ to work with an ASP VBScript project. http://thewayofcoding.com/2016/11/adjusting-notepad-to-work-with-an-asp-vbscript-project/
