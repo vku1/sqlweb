@@ -706,9 +706,8 @@ Function func_CreateTableHTML()
 	' read previous stage parameters if they exists
 	prc = CInt( NVL( request.querystring("prc") ,"1") )
 	id_value = Request.QueryString("iv")
-	'operation_type = Request.QueryString("op") ' i - insert (add new), e - edit row
 	
-	Select  Case Request.QueryString("op")
+	Select  Case Request.QueryString("op") 'operation_type = Request.QueryString("op") ' i - insert (add new), e - edit row
 			Case "i"
 				g_OperationTypeInsertUpdate = "INSERT"
 			Case "e" 
@@ -845,7 +844,6 @@ Function func_CreateFilterItemHTML(in_SQL)
 	'response.write in_sql
 	'response.end
 	if instr(in_SQL," ")<>0 then
-		'if ucase(mid(in_SQL,1,6))="SELECT" then
 			Dim rs, cn
 			Dim ret_, res_
 
@@ -913,7 +911,6 @@ Function func_CreateFilterItemHTML(in_SQL)
 					ret_=ret_ & "</datalist></td><tr>" & vbcrlf
 			end if
 			
-		'end if
 	else
 		
 		ret_ = ret_ & "<tr><td>" & func_ReplaceTabColNameWithText(in_SQL) &  "</td><td><input type='text' name='" & in_SQL & "' value='" & Request.QueryString(in_SQL) & "'>" & vbcrlf	
@@ -940,7 +937,7 @@ Function func_GetGlobalFilter(in_rs)
 							
 							if session(arr_(ii))<>"" then ' if session value is "" then ommit this in filter. 
 								if rs_field_type(in_rs.fields(i).type)	=0 then ft="" else ft="'" 
-									if field_value<>"%" then ' if used %, then we not limit data in filter
+									if field_value<>"%" then ' if used %, then we not limit data in filter. specific value for all elements is %, potential BUG.
 
 										if filter_="" then 
 												filter_ = filter_ & lcase(arr_(ii)) & " = "  & ft & field_value & ft & " "
@@ -977,9 +974,9 @@ Function execute_SCRIPT(in_tsql)
 	set cn = nothing
 
 	if err.number=0 then
-		msg_ = "<br>Done without errors.<br> " '& in_tsql
+		msg_ = "<br>Done without errors.<br> " 
 	else
-		msg_ = err.number & " " & err.description & " " '& in_tsql
+		msg_ = err.number & " " & err.description & " " 
 	end if
 	call debug_write(msg_,"")
 	execute_SCRIPT = msg_
@@ -1055,14 +1052,12 @@ function func_CreateInsertUpdateStatementFromFormValues(in_table,where_statement
 			
 			res_ = tmplt_b' sozdajom 1 row i dalee ego budem zapolnjatj
 			for i=0 to ubound(arr_)
-				op_ = arr_(i)' skoljko budet operacij zamen, libo 1 libo bolshe
-				
-				'opv_=split(arr_val_(i),", ")' spisok znachenij v dannoj operacii, 1 libo bolshe
+				op_ = arr_(i) ' count of replacements in this operation always >=1
 				
 				if op_>0 then
 					call debug_write (">0","")
 					resl_=""
-					opv_=split(arr_val_(i),", ")' spisok znachenij v dannoj operacii, 1 libo bolshe
+					opv_=split(arr_val_(i),", ")'count of values in this operation always >=1
 					for ii=0 to op_
 						res1_ = res1_ & replace(res_,"#" & i & "#",opv_(ii)) & vbcrlf '"<br>" 
 					next
@@ -1071,14 +1066,10 @@ function func_CreateInsertUpdateStatementFromFormValues(in_table,where_statement
 				
 				if op_=0 then
 					call debug_write ("=0","")	
-					opv_=split(arr_val_(i),chr(0))' spisok znachenij v dannoj operacii, vsegda 1 
+					opv_=split(arr_val_(i),chr(0))' count of values in this operation always 1
 					res_ = replace(res_,"#" & i & "#",opv_(0)&"") & vbcrlf '"<br>"
 				end if
 
-				'if op_<0 then
-				'	call debug_write ("=-1","")
-				'	res_ = replace(res_,"#" & i & "#","NULL") & vbcrlf '"<br>"
-				'end if
 				call debug_write ("Counter i=" & i & " op_=" & op_ & " ubound of opv_=" & ubound(opv_) & " value res_=" & res_ ,"")
 				out_=out_ & res_
 			next
@@ -1151,7 +1142,7 @@ end function
 
 Function get_htmlRS()
 
-'on error resume next ' '#####
+'on error resume next 
 
 	Dim rs, rc_null,cn
 	dim res_
@@ -1176,9 +1167,9 @@ Function get_htmlRS()
 	if g_TableColumnsSortingAllowed="YES" then
 		if request.querystring("s")<>"" then
             qs_s = func_MinimizeSortingQS(request.querystring("s"))		
-			sSQL=sSQL & " order by " & qs_s '  #sorting / and \# ' this line is for tables content sorting by column
+			sSQL=sSQL & " order by " & qs_s 
 		else 
-		    if g_TableColumnsDefaultSorting<>"" then sSQL=sSQL & " order by " & g_TableColumnsDefaultSorting ' if default sorting columns not null then apply them to view
+		    if g_TableColumnsDefaultSorting<>"" then sSQL=sSQL & " order by " & g_TableColumnsDefaultSorting ' Use default sorting columns if it is not null
 		end if	
 	end if
 	
@@ -1191,7 +1182,7 @@ Function get_htmlRS()
     Set rs = CreateObject("ADODB.Recordset")
 	cn=Application(g_page_datasource)
 	
-	rs.PageSize = g_page_records_count ' kolichestvo zapisej na stranice VARIABLE IN (https://www.sitepoint.com/community/t/asp-recordset-paging/1026/3)
+	rs.PageSize = g_page_records_count ' records count on 1 data table page
 	rs_page_size = rs.PageSize
 	rs.CacheSize = rs.PageSize
 	RS.CursorLocation = 3  ' 3-adUseClient
@@ -1202,7 +1193,7 @@ Function get_htmlRS()
 	'	response.write ssql
 	'	response.end
 	'end if
-	'rs.open sSQL, cn , 3, 3, &H1 'adOpenStatic, adLockOptimistic, adCmdText ' https://www.w3schools.com/asp/met_rs_open.asp
+	
     
 			'#### GlobalVariablesFilter######
 				dim filter_
@@ -1231,8 +1222,8 @@ Function get_htmlRS()
 			links_ = links_ & "<a href='" & request.Servervariables("SCRIPT_NAME") & "?" & current_page & "&prc=" & pp & "'>" & pp & "</a>&nbsp;"
 	next 
 	
-	' pagination block on top of filter and table
-	table = table & "<table class='DataTable' id='DataTable'><caption>" & g_Table_Caption_and_Info & "</caption><thead>" ' THEAD###
+	' / --- pagination block on top of filter and table
+	table = table & "<table class='DataTable' id='DataTable'><caption>" & g_Table_Caption_and_Info & "</caption><thead>" 
 	
 	if g_TableRowsUpdateAllowed="YES" then
 		table=table & "<tr><th>Edit</th>"  
@@ -1262,8 +1253,8 @@ Function get_htmlRS()
 	  if func_CheckIfBracketsQuotesNeeded(ucase(rs.fields(i).name))=ID_ then id_column=i 
 	next 
 	table = table & "</tr></thead><tbody>" & vbcrlf
+	' \ ---------------
 	
-	'############
 	if g_TableRowsUpdateAllowed="YES" or g_TableRowsInsertAllowed="YES" then
 		if id_column="" then 
 			get_htmlRS="ID column not found but is necessary for records edition. Check Report settings syntax." 
@@ -1272,8 +1263,8 @@ Function get_htmlRS()
 	end if
 	
 	do while not rs.eof
-	    rec_on_page=rec_on_page+1  ' added pagination
-		if rec_on_page>rs_page_size then exit do ' added pagination
+	    rec_on_page=rec_on_page+1  
+		if rec_on_page>rs_page_size then exit do 
 		
 		if g_TableRowsUpdateAllowed="YES" then
 		
@@ -1283,7 +1274,7 @@ Function get_htmlRS()
 				ft="'"
 			end if
 			
-			table=table & "<tr><td><a href='" & page_name & "?iv=" & ft & rs.fields(id_column).value & ft & "&op=e&p=" & page & "&prc=" & prc & "'>...</td>" '###VKU###
+			table=table & "<tr><td><a href='" & page_name & "?iv=" & ft & rs.fields(id_column).value & ft & "&op=e&p=" & page & "&prc=" & prc & "'>...</td>" 
 		else
 			table=table & "<tr>" 
 		end if
@@ -1305,7 +1296,7 @@ Function get_htmlRS()
 				else
 					' html 5 fields
 					ft_inputtype = rs_field_db_type(rs.fields(i).type,rs.fields(i).name)
-					if ft_inputtype = "date" then ' convert all the dates to one universal format YYYY/MM/DD 
+					if ft_inputtype = "date" then  ' convert all the dates to one universal format YYYY/MM/DD 
 						html_cell="" 
 						html_cell=year(rs.fields(i).value) & "/"
 						if month(rs.fields(i).value)<10 then html_cell = html_cell & "0" & month(rs.fields(i).value) & "/" else html_cell = html_cell & month(rs.fields(i).value) & "/"
@@ -1430,7 +1421,7 @@ Function func_ReduceSortingParametersInQS(in_qs)
 End Function
 
 Function func_MinimizeSortingQS(in_qss)
-	' Sorting parameters minimisation in query string (ASC and DESC policy)
+	' Sorting parameters minimisation in query string (ASC and DESC)
 	Dim arr_
 	Dim ret_
 	dim increment
@@ -1487,8 +1478,8 @@ Function add_rowRS(g_Table_Caption_and_Info,editable_cols,g_DBTableDropdownsForI
 	dim f_arr_values
 	dim prc
 	
-	ec= ucase(g_DBTableIdColumn & "," & editable_cols) 	            ' ######### g_DBTableIdColumn & editable columns
-	rs_sql = "select " & ec & " from " & g_DBTableForInsertUpdate   ' ######### "select * from " & g_DBTableForInsertUpdate
+	ec= ucase(g_DBTableIdColumn & "," & editable_cols) 	            
+	rs_sql = "select " & ec & " from " & g_DBTableForInsertUpdate   
 	
     Set rs = CreateObject("ADODB.Recordset")
 	cn=Application(g_page_datasource)
@@ -1506,7 +1497,7 @@ Function add_rowRS(g_Table_Caption_and_Info,editable_cols,g_DBTableDropdownsForI
 			if dd_ifexist<>"" then
 				arr_Two_Value = dd_ifexist
 			else
-				' html5 fields type support by browsers
+				' html5 support 
 				if g_use_html5_fields_for_input="YES" then 
 					ft_inputtype=ft_inputtype
 				else
@@ -1576,7 +1567,7 @@ Function edit_rowRS(g_Table_Caption_and_Info,id_value,editable_cols,g_DBTableDro
 	
 	if id_value ="" or instr(id_value,",")<>0 then 
 		call debug_write("Abnormal Table ID for edition received : NULL or multiple values from query string. Vulnerable action from user.", "")
-		exit function  ' prevent multiple id edition. iv=1&iv=2 not possible. 
+		exit function  ' prevent multiple id edition like this iv=1&iv=2 -> not possible. 
 	end if		
 	
     Set rs = CreateObject("ADODB.Recordset")
@@ -1659,7 +1650,7 @@ Function edit_rowRS(g_Table_Caption_and_Info,id_value,editable_cols,g_DBTableDro
 		end if
 	end if
 
-	prc = CInt( NVL( request.querystring("prc") ,"1") )'###VKU###
+	prc = CInt( NVL( request.querystring("prc") ,"1") )
 	table="<br><form action='" & page_name & "?op=e&a=a&iv=" & id_value & "&p=" & page & "&prc=" & prc & "' method='post'><table class='DataTable'><caption>" & g_Table_Caption_and_Info & "</caption>" & new_row & "</table><br>"
 	table = table & "<input type='submit' value='Apply Changes'></form>"
 
@@ -1741,7 +1732,6 @@ on error resume next
 		exit function    
 	end if	
 	
-	
 	id_name=rs1.fields(0).name
 	ft = rs_field_type(rs1.fields(0).type)
 	if id_name & "" ="" or ft="" then
@@ -1749,7 +1739,6 @@ on error resume next
 	end if	
 	records_in_loop=0	
 
-	 
 	do while not rs1.eof
 	    records_in_loop=records_in_loop+1
 		if ucase(cstr(in_value))=ucase(cstr(rs1.fields(0).value)) and dd_type <> "DATALIST" then 
@@ -1930,8 +1919,6 @@ on error resume next
 	
 End Function
 
-
-' Checked
 Public sub write_log(in_msg)
 
 ' to use logging in application and messages generation You need to 
@@ -2335,10 +2322,6 @@ Function func_VulnerableElementsCheck(in_statement)
 	func_VulnerableElementsCheck = ret_
 	
 End Function
-
-
-
-
 
 Function func_CreateGlobalVariablesDD(in_data) ' in_name,in_sql
 
