@@ -212,12 +212,6 @@ function showDebugContent() {
 </script>
 </head>
 <body>
-<%
-''for each x in Request.ServerVariables
-''  response.write(x & "  " & request.servervariables(x) & "<br>")
-''next
-''response.end
-%>
 
 <%
 
@@ -233,9 +227,9 @@ Dim g_clientIP
 
 ' /-- Physical pagename of this file for links generation -------
 Dim page_name ' this script physical filename like this sqlsite.asp
-									
 	page_name = func_getPageName()	
-	
+' \---------------------------
+
 ' /---- Page number ----------
 'If the default page number is ommited, then we redirect script to proper page (by default p=1)
 dim page
@@ -272,6 +266,7 @@ dim g_MENU ' global variable for menu.
 ' Functionality to transform databases field types to proper input field type. Not supported by all the browsers
 ' For more info: https://developer.mozilla.org/en-US/docs/Learn/Forms/HTML5_input_types
 ' Recognised: text field, numeric, date, time, datetime-local. 
+' Date format is based on browser language in Chrome or Edge. For US use default, For Europe use "UK English".
 dim g_use_html5_fields_for_input ' YES/NO '<input type='date|number|text|...'
 	g_use_html5_fields_for_input = "YES" 
 ' \-------------------	
@@ -305,17 +300,23 @@ dim g_columns_end_bracket
 	g_columns_end_bracket="]"   ' ] for SQL Server , """" for Oracle,PostgreSQL,SQL Server,SQLite , "`" for MySQL,MariaDB
 ' \--------------------
 
-' /---- HTML5 date posting and conversion from string YYYY-MM-DDTHH:MM to proper sql format based on special database engine rules ----------------
+' /---- When You get or set date field in browser it's format in HTML5  is always YYYY-MM-DDTHH:MI and this string value replaces #DATE# part of function
+' To change this string to database date format You need to transform string to date using database engine rules 
+' or create proper string using source string
 Dim g_DateFromTextToSQL   ' added for HTML5 universal date string value
-	g_DateFromTextToSQL = "CAST('#DATE#' as Date)"
+	g_DateFromTextToSQL = "CAST('#DATE#' as Date)" 'For SQL Server
+	'g_DateFromTextToSQL = "TO_DATE( SUBSTR('#DATE#',1,10),'YYYY-MM-DD')" 'For ORACLE
 	
 Dim g_DateTimeFromTextToSQL   ' added for HTML5 universal date string value
-	g_DateTimeFromTextToSQL = "CAST('#DATE#:00' as DateTime)" ' Incorrect default browser datetime-local value is -> CAST('2021-06-02T08:51' as DateTime), Correct ->  CAST('2021-06-02T08:51:00' as DateTime)
+	g_DateTimeFromTextToSQL = "CAST('#DATE#:00' as DateTime)" ' Incorrect default browser datetime-local value is -> CAST('2021-06-02T08:51' as DateTime), Correct ->  CAST('2021-06-02T08:51:00' as DateTime) 'For SQL Server
+	'g_DateTimeFromTextToSQL = "TO_DATE( REPLACE('#DATE#','T',' ') ,'YYYY-MM-DD HH24:MI')" ' For ORACLE
+	
 
 ' /---- Columns Beautifier ----------------
 ' As you know table columns names may have strange names in database, not friendly for end users.To convert these names to 
-' good looking, set "g_use_columns_beautifier" parameter to YES and also add all transformations to variable "g_TableColumnsHeadersSubstitution" as pairs: [TableColumnName1;NameOfThisColumn1InReport;TableColumnName2;NameOfThisColumn2InReport;].
-' "g_TableColumnsHeadersSubstitution" is text string separated by ";" delimiter, where N element is database table column code and N+1 element is N column Userfriendly name. With a step 2.
+' good looking, set "g_use_columns_beautifier" parameter to YES and also add all transformations to variable 
+' "g_TableColumnsHeadersSubstitution" as pairs: [TableColumnName1;NameOfThisColumn1InReport;TableColumnName2;NameOfThisColumn2InReport;].
+' "g_TableColumnsHeadersSubstitution" is text string separated by ";" delimiter, where N element is database table column code and N+1 element is N column Userfriendly name.
 ' Example g_TableColumnsHeadersSubstitution="id;Identifier;fname;First Name;lname;Last Name;" 
 ' All founded column names with a code "fname" will be transformed to "First Name". No changes in database will be made.
 dim g_use_columns_beautifier ' YES/NO to use this functionality you need to fill variable "g_TableColumnsHeadersSubstitution=" with appropriate values
@@ -331,14 +332,12 @@ dim g_TableColumnsHeadersSubstitution
 
 Dim g_ColumnsSubstitutionKeyValue
 g_ColumnsSubstitutionKeyValue = split(g_TableColumnsHeadersSubstitution,";")
-	
 ' \--------------------	
 
 ' /---- Debug info.  ----------------
 dim g_debug_flag ' if debug_="YES" then collect info for debugging to print to the same page. DO NOT activate in production! Create copy of page, and rename it in filesystem and in code, and then activate debug.
 	g_debug_flag="YES" ' NO
 dim g_debug_log ' All debug info will be collected in this variable 
-	
 ' \--------------------	
 
 ' /---- Subtotals in table for numeric columns  -------
@@ -356,7 +355,7 @@ Dim g_Form_Info_Help							 ' use this to show users some additional information
 Dim g_SQL 										 ' sql select from database
 Dim g_FilterDropdownsAllowed					 ' Filter enabled or not (YES/NO)
 Dim g_FilterDropdownsColumns					 ' Example; select '%' as VendorName,'All vendors' as Vendor from dual union select VendorName,VendorName as Vendor from Vendors'
-Dim g_FilterDatalistsColumns					 ' default type for Dropdown is <select><option> tags construction, but you can change it to datalist 																																	   
+Dim g_FilterDatalistsColumns					 ' default type for Dropdown is <select><option> tags construction, but you can change it to datalist 
 Dim g_FiltersDefaultValues						 ' select '' as VendorName,'' as Vendor from dual // dual is https://en.wikipedia.org/wiki/DUAL_table, for sql server the same will be -> select '' as VendorName,'' as Vendor -- https://en.wikipedia.org/wiki/DUAL_table
 Dim g_TableColumnsSortingAllowed				 ' Allow Columns Sorting by click them (YES/NO)
 Dim g_TableColumnsDefaultSorting				 ' Default sorting sql syntah may be very useful for default view in reports (example: "ColumnName1 ASC, ColumnName2 DESC")	
@@ -377,7 +376,7 @@ Dim g_TableUpdateInsertLayoutVerticalHorizontal	 ' For Operations Update and Ins
 ' after selecting value, you will be redirected to main menu and value will be used in url string+in session variable; 
 ' at next steps value will be extracted from session variable 
 Dim g_GlobalVariables
-	'g_GlobalVariables       = func_CreateGlobalVariablesDD("VesselName;select '' vesselname union SELECT vesselname FROM vessels where IsEnabled='YES' order by vesselname") 
+	'g_GlobalVariables       = func_CreateGlobalVariablesDD("Album;select '' Album union SELECT Album FROM dbo.Albums order by Album") 
 Dim g_GlobalVariablesValues
 	g_GlobalVariablesValues = func_GetGlobalVariablesValues()
 ' \-------------------------------------------------------------------------------------------------------------------------------
