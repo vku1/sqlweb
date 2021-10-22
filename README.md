@@ -3,6 +3,10 @@ This is framework to create web site by using only SQL queries.
 
 If you have never created a front-end to databases or reports for the web before, then it's time to try it with this framework.
 
+## Sample Page and Code
+![Page](https://github.com/vku1/sqlweb/blob/main/sample_page.jpg)
+![Code](https://github.com/vku1/sqlweb/blob/main/sample_code.jpg)
+
 ## Environment and Knowledges to start?
 - You know what is the database, may write SQL queries and understand tables relations and keys
 - Has PC/Server with operating system where Internet Information Server (IIS) may be installed
