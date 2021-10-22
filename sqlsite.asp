@@ -551,109 +551,6 @@ SELECT CASE cstr(page)
 		g_DBTableDatalistsForInsertUpdate = ""
 		g_DBTableMultipleDropdownsFieldsForInsert="artistid"
 		g_TableUpdateInsertLayoutVerticalHorizontal="V"
-
-    case "7"
-	
-		g_Table_Caption_and_Info = "Equipment Retirement Criterias"
-		g_Form_Info_Help =                    "'One Rule' has 3 retirement criterias for any equipment: Running hours, Service life in month, Inspection status/color.<br>"
-		g_Form_Info_Help = g_Form_Info_Help & "When any of the criteria is reached, the equipment will be written off/retired automatically.<br>"
-		g_Form_Info_Help = g_Form_Info_Help & "We recommend to use rulename in format RHxxxxx-SMxx-RED, which mean RunningHoursxxxxx-ServiceMonthxx-Color."
-		g_SQL =         " SELECT [Id],[rulename],[running_hours_greater_than],[service_life_inmonth_greater_than],[condition_color_is],[IsEnabled] FROM [dbo].[retirement_rules_criteria] "
-        g_SQL = g_SQL & " "
-        g_SQL = g_SQL & "  "
-        g_SQL = g_SQL & "  "
-        		
-		g_FilterDropdownsAllowed = "NO"
-		g_FilterDropdownsColumns = ""
-		g_FiltersDefaultValues = ""
-		
-		g_TableColumnsSortingAllowed = "YES" 
-		g_TableColumnsDefaultSorting = "id asc"
-        
-	    g_TableRowsUpdateAllowed = "YES" : g_TableRowsInsertAllowed  = "YES" 
-		g_DBTableForInsertUpdate="dbo.retirement_rules_criteria"
-		g_DBTableIdColumn="id"
-		g_DBTableFieldsListForInsertUpdate="rulename,running_hours_greater_than,service_life_inmonth_greater_than,condition_color_is,IsEnabled"
-		g_DBTableDropdownsForInsertUpdate = "IsEnabled;SELECT statusname IsEnabled,statuscomment FROM dbo.status;condition_color_is;SELECT [statusname] as condition_color_is,statuscomment FROM [dbo].[inspectionstatus]"
-		g_TableUpdateInsertLayoutVerticalHorizontal="H"
-	
-	CASE "8"
-	
-		g_Table_Caption_and_Info = "Equipment Mooring Events"
-		g_Form_Info_Help = ""	
-		g_SQL =         " SELECT me.Id,e.vesselname,concat(e.eq_type,'/',e.winchuniquename,'/',e.vesselname,'/',e.serialnumber) Equipment,[portname],format([startmooring],'yyyy-MM-dd hh:m:ss') startmooring,format([endmooring],'yyyy-MM-dd hh:m:ss') endmooring,[mooringhours] FROM [WINCHES].[dbo].[mooring_events] me "
-        g_SQL = g_SQL & " left join dbo.v_equipment e on e.id=me.equipment_id"
-        g_SQL = g_SQL & "  "
-        g_SQL = g_SQL & "  "
-        		
-		g_FilterDropdownsAllowed = "NO"
-		g_FilterDropdownsColumns = ""
-		g_FiltersDefaultValues = ""
-		
-		g_TableColumnsSortingAllowed = "YES" 
-		g_TableColumnsDefaultSorting = "e.id asc"
-        
-	    g_TableRowsUpdateAllowed = "YES" : g_TableRowsInsertAllowed  = "YES" 
-		g_DBTableForInsertUpdate="dbo.mooring_events"
-		g_DBTableIdColumn="id"
-		g_DBTableFieldsListForInsertUpdate="equipment_id,portname,startmooring,endmooring"
-		g_DBTableDropdownsForInsertUpdate = "equipment_id;select id equipment_id,concat(eq_type,'/',winchuniquename,'/',vesselname,'/',serialnumber) Equipment,vesselname FROM dbo.v_equipment where IsEnabled='YES';portname;SELECT unlcode portname ,concat([unlcode],'/',[worldregion],'/',[country],'/',[province],'/',[city]) SeaPort  FROM [WINCHES].[dbo].[unlocode_ports] "
-		g_DBTableDatalistsForInsertUpdate="portname"
-		g_TableUpdateInsertLayoutVerticalHorizontal="V"
-	
-	case "9"
-	
-		g_Table_Caption_and_Info = "World Ports"
-		g_Form_Info_Help = ""	
-		g_SQL =         " SELECT [Id],[unlcode],[worldregion],[country],[province],[city],[coordinates] FROM [WINCHES].[dbo].[unlocode_ports] "
-        g_SQL = g_SQL & " "
-        g_SQL = g_SQL & "  "
-        g_SQL = g_SQL & "  "
-        		
-		g_FilterDropdownsAllowed = "YES"
-		g_FilterDropdownsColumns =  "select '%' as worldregion , 'All regions'    worldregion  union  select distinct worldregion, worldregion  from dbo.unlocode_ports;"  _
-		                          & "select '%' as country     , 'All countries'  country      union  select distinct country,     country      from dbo.unlocode_ports;" _
-								  & "select '%' as province    , 'All provinces'  province     union  select distinct province,    province     from dbo.unlocode_ports;" _
-								  & "select '%' as city        , 'All cities'     city         union  select distinct city,        city         from dbo.unlocode_ports" 
-								  
-		g_FiltersDefaultValues = "select '' worldregion,'' country,'' province, '' city"
-		
-		g_TableColumnsSortingAllowed = "YES" 
-		g_TableColumnsDefaultSorting = "country asc"
-        
-	    g_TableRowsUpdateAllowed = "YES" : g_TableRowsInsertAllowed  = "YES" 
-		g_DBTableForInsertUpdate="dbo.unlocode_ports"
-		g_DBTableIdColumn="id"
-		g_DBTableFieldsListForInsertUpdate="unlcode,worldregion,country,province,city,coordinates"
-		g_DBTableDropdownsForInsertUpdate = "worldregion;select distinct worldregion, worldregion  from dbo.unlocode_ports where worldregion<>'';country;select country,country countryname from (select distinct country  from dbo.unlocode_ports where country<>'') z order by country;province;select distinct province, province  from dbo.unlocode_ports where province<>'';city;select city,city cityname from (select distinct city  from dbo.unlocode_ports where city<>'') z order by city"
-		g_DBTableDatalistsForInsertUpdate="province;city"
-		g_TableUpdateInsertLayoutVerticalHorizontal="V"
-	
-	case "10"
-			
-		g_Table_Caption_and_Info = "Equipment Inspections"
-		g_Form_Info_Help = ""	
-		g_SQL =         " select ei.id, eq.equipment,ei.inspectioncomment,ei.inspectiondate,ei.inspectionstatus,ei.IsEnabled    from "
-        g_SQL = g_SQL & " (SELECT Id,equipment_id,inspectiondate,inspectionstatus,inspectioncomment,IsEnabled FROM dbo.equipment_inspections) ei"
-        g_SQL = g_SQL & " left join  (select id equipment_id,concat(eq_type,'/',winchuniquename,'/',vesselname,'/',serialnumber) Equipment FROM dbo.v_equipment) eq"
-        g_SQL = g_SQL & " on ei.equipment_id = eq.equipment_id "
-        		
-		g_FilterDropdownsAllowed = "NO"
-		g_FilterDropdownsColumns =  ""  _
-		                          & ""
-								  
-		g_FiltersDefaultValues = ""
-		
-		g_TableColumnsSortingAllowed = "YES" 
-		g_TableColumnsDefaultSorting = "id desc"
-        
-	    g_TableRowsUpdateAllowed = "YES" : g_TableRowsInsertAllowed  = "YES" 
-		g_DBTableForInsertUpdate="dbo.equipment_inspections"
-		g_DBTableIdColumn="id"
-		g_DBTableFieldsListForInsertUpdate="inspectiondate,equipment_id,inspectionstatus,inspectioncomment,IsEnabled"
-		g_DBTableDropdownsForInsertUpdate = "IsEnabled;SELECT statusname IsEnabled,statuscomment FROM dbo.status;equipment_id;select '' equipment_id,'' Equipment,'' vesselname union select id equipment_id,concat(eq_type,'/',winchuniquename,'/',vesselname,'/',serialnumber) Equipment,vesselname FROM dbo.v_equipment where IsEnabled='YES';inspectionstatus;SELECT statusname as inspectionstatus,statuscomment FROM dbo.inspectionstatus  where IsEnabled='YES'"
-		g_DBTableDatalistsForInsertUpdate=""
-		g_TableUpdateInsertLayoutVerticalHorizontal="V"
 		
 	case else
 		response.redirect(page_name & "?p=" & g_DefaultPageCode) 
@@ -751,35 +648,29 @@ End Function
 Function func_CreateMenuHTML()
 	
 	if g_generate_menu_from_string="NO" then
-	' #MANUAL_MENU block example
+	' / --- #MANUAL_MENU block example
 		%>
 			<div class='sidenav'>
 				<img src='your_image_url_here.jpg'>
 				
-				<a href="<%=page_name%>">Start Page</a>
-				<button class='dropdown-btn'>Global Dictionaries<i class='fa fa-caret-down'></i></button>
+				<a href="<%=page_name%>">Home</a>
+				<button class='dropdown-btn'>Statistics<i class='fa fa-caret-down'></i></button>
 					<div class='dropdown-container'>
-						<a href='<%=page_name%>?p=1'>Record Status</a>
-						<a href='<%=page_name%>?p=2'>Vessels</a>
-						<a href='<%=page_name%>?p=7'>Ropes</a>
+						<a href='<%=page_name%>?p=1'>Years</a>
+						<a href='<%=page_name%>?p=2'>Departments</a>
+						<a href='<%=page_name%>?p=3'>Monthly by the department</a>
+						<a href='<%=page_name%>?p=4'>Purchase orders</a>
 					</div>
-				<button class='dropdown-btn'>Other Dictionaries<i class='fa fa-caret-down'></i></button>
+				<button class='dropdown-btn'>Chinook<i class='fa fa-caret-down'></i></button>
 					<div class='dropdown-container'>
-						<a href='<%=page_name%>?p=3'>Operations</a>
-						<a href='<%=page_name%>?p=4'>Locations</a>
-						<a href='<%=page_name%>?p=5'>Damages</a>
-						<a href='<%=page_name%>?p=6'>Inspection Results</a>
-					</div>
-				<button class='dropdown-btn'>Vessel Data<i class='fa fa-caret-down'></i></button>
-					<div class='dropdown-container'>
-						<a href='<%=page_name%>?p=8'>Vessel Ropes</a>
-						<a href='<%=page_name%>?p=9'>Ropes Operations</a>
+						<a href='<%=page_name%>?p=5'>Artists</a>
+						<a href='<%=page_name%>?p=6'>Albums</a>
 					</div>
 				<%="<a id='downloadLink' onclick='exportToExcel(this)'>Export to excel</a>"%>
 				<%="<a href='#' onclick='showNewsInfo()'>Info/Help</a>"%>			
 			</div>
 		<%
-	' #MANUAL_MENU block end	
+	' \ --- #MANUAL_MENU block end	
 	else
 
 		response.write func_GenerateMenu()
