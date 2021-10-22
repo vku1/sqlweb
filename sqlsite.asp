@@ -214,8 +214,10 @@ function showDebugContent() {
 <body>
 
 <%
+' // --- USER AREA START ------
+' in this area USER set main parameters by changing them
 
-' /--- Maintenance block ----------------------------------
+' / --- Maintenance block ----------------------------------
 '  check visitor ip and make actions based on this, as example there is block which can be uncommented in case of maintenance on server
 Dim g_clientIP  
 	g_clientIP = Request.Servervariables("REMOTE_ADDR") 
@@ -223,7 +225,7 @@ Dim g_clientIP
 	'	response.write "Dear User, <br>Site temporary unavailable for maintenance purposes.<br>Have a nice day." & g_ClientIP
 	'	response.end
 	'end if
-' \-------------------
+' \ -------------------
 
 ' /-- Physical pagename of this file for links generation -------
 Dim page_name ' this script physical filename like this sqlsite.asp
@@ -369,7 +371,6 @@ Dim g_DBTableDatalistsForInsertUpdate            ' change default tag constructi
 Dim g_DBTableMultipleDropdownsFieldsForInsert    ' List of these values will be repeated N times while inserting rows
 Dim g_TableUpdateInsertLayoutVerticalHorizontal	 ' For Operations Update and Insert data layout vertical or horisontal (V/H). For tables containing more than 10 columns, may be very useful	
 ' \ --------------------------------------------	
-
 
 ' /--------- Global Variables - Dropdowns in top of menu which values will be automatically applied to all filters and datatables 
 ' for each variable will be created session variable with value selected  by the user
@@ -557,6 +558,7 @@ SELECT CASE cstr(page)
 		
 END SELECT
 
+' \\ --- USER AREA END ------
 
 ' / ---- Generate page block ------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -602,7 +604,10 @@ END SELECT
 					
 	' Debug block
 	call debug_write("End page generator","PRINT")
-
+%>
+</body>
+</html>
+<%
 	response.end 
 	
 ' \ ---- there the page generation ends -------------------------------------------------------------------------------------------------------------------------------------------
@@ -623,7 +628,6 @@ Sub debug_write (in_msg,in_termination_flag)
 		end if
 	end if
 End Sub
-
 
 Function func_InfoHelpHTML()
 
@@ -697,7 +701,6 @@ Function func_CreateMenuHTML()
 	<%
 	
 End Function
-
 
 Function func_CreateTableHTML()  
 	
@@ -983,7 +986,7 @@ Function execute_SCRIPT(in_tsql)
 	
 End Function
 
-function func_CreateInsertUpdateStatementFromFormValues(in_table,where_statement)
+Function func_CreateInsertUpdateStatementFromFormValues(in_table,where_statement)
     dim line_a
 	dim line_b
 	dim tmplt_a,tmplt_b, operations_count_, arr_
@@ -1137,8 +1140,7 @@ function func_CreateInsertUpdateStatementFromFormValues(in_table,where_statement
 	call debug_write ("func_CreateInsertUpdateStatementFromFormValues: SQL construction: " & replace(ret_,vbcrlf,"<br>"),"")
 	func_CreateInsertUpdateStatementFromFormValues = ret_
 	
-end function
-
+End Function
 
 Function get_htmlRS()
 
@@ -1548,7 +1550,6 @@ Function add_rowRS(g_Table_Caption_and_Info,editable_cols,g_DBTableDropdownsForI
 	
 End Function
 
-
 Function edit_rowRS(g_Table_Caption_and_Info,id_value,editable_cols,g_DBTableDropdownsForInsertUpdate)
 
 	Dim rs, cn
@@ -1773,10 +1774,7 @@ on error resume next
 	
 End Function
 
-
-
-
-function rs_field_type(in_value)
+Function rs_field_type(in_value)
 ' https://docs.microsoft.com/en-us/sql/ado/reference/ado-api/datatypeenum?view=sql-server-2017
 	dim ret_
 	select case in_value
@@ -1824,9 +1822,9 @@ function rs_field_type(in_value)
 	'response.write ret_ & " " & in_value & " " & in_name & "<br>"
 	'qqqq = rs_field_db_type(in_value,in_name)
 	rs_field_type=ret_
-end function
+End Function
 
-function rs_field_db_type(in_value,in_name)
+Function rs_field_db_type(in_value,in_name)
 ' https://docs.microsoft.com/en-us/sql/ado/reference/ado-api/datatypeenum?view=sql-server-2017
 	dim ret_
 	select case in_value
@@ -1874,7 +1872,7 @@ function rs_field_db_type(in_value,in_name)
 
 	rs_field_db_type=ret_
 
-end function
+End Function
 
 Function Read_Rs(sSQL,delimiter,row_delimiter,include_header)
 
@@ -2009,7 +2007,6 @@ Function func_ReplaceTabColNameWithText(in_column)
 	func_ReplaceTabColNameWithText=out_
 	
 End Function
-
 
 Function func_GenerateMenu()
 
@@ -2379,7 +2376,6 @@ Function func_CreateGlobalVariablesDD(in_data) ' in_name,in_sql
 	
 End Function
 
-
 Function func_GetGlobalVariablesValues()
 
 	Dim ret_
@@ -2395,5 +2391,3 @@ Function func_GetGlobalVariablesValues()
 	
 End Function
 %>
-</body>
-</html>
