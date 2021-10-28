@@ -31,8 +31,19 @@ If you have never created a front-end to databases or reports for the web before
 - The simpliest page needs only one variable which is also SQL query
 - The hardest page with full possible functionality You may get using 15 variables (one variable is query or constraint or hybrid)
 
+## Limitations
+- Only 32bit odbc drivers supported
+- You can't delete records
+
 ## First configuration
-- Your database proper connectionstring
+
+[Install IIS for Windows XP, 2000, 2003](http://www.shotdev.com/asp/asp-installation/install-iis-windows-xp-2000-2003/)
+[Install IIS for Windows 7,Vista,8,8.1, for Windows Server 2008, 2008 r2, 2012, 2012 r2, ] (https://docs.microsoft.com/en-us/iis/application-frameworks/running-classic-asp-applications-on-iis-7-and-iis-8/classic-asp-not-installed-by-default-on-iis).  
+[Install IIS for Windows 10](https://docs.microsoft.com/en-us/answers/questions/370931/does-iis-in-windows-10-support-an-asp-web-site.html)
+
+Open IIS, find default application pool and set parameter "using 32 bit applications" to True.
+Place sqlweb.asp and global.asa to default c:\wwwroot\
+Install 32 bit odbc driver for Your database and try to Your database proper connectionstring
 
 variables:
 - g_DefaultPageCode
