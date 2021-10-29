@@ -61,7 +61,7 @@ Install IIS for [Windows XP, 2000, 2003](http://www.shotdev.com/asp/asp-installa
 
 Open IIS, find default application pool and set parameter "using 32 bit applications" to True.
 
-Place [sqlsite.asp](https://github.com/vku1/sqlweb/blob/main/sqlsite.asp) and [global.asa](https://github.com/vku1/sqlweb/blob/main/global.asp) to iis directory c:\inetpub\wwwroot\.
+Place [sqlsite.asp](https://github.com/vku1/sqlweb/blob/main/sqlsite.asp) and [global.asa](https://github.com/vku1/sqlweb/blob/main/global.asa) to iis directory c:\inetpub\wwwroot\.
 
 Install 32 bit odbc driver for Your database. 
 Check if it is present in odbc drivers list. 
