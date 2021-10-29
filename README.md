@@ -4,7 +4,7 @@
 ![Version](https://img.shields.io/badge/version-1.02-yellow)
 ![Language](https://img.shields.io/badge/Language-ASP%20Classic-blue)
 ![IIS](https://img.shields.io/badge/IIS%20version-Any-blue)
-![OS](https://img.shields.io/badge/OS-Any%20from%20Windows%202000-blue)
+![OS](https://img.shields.io/badge/OS->=%20Windows%202000-blue)
 
 This is framework to create web site by using only SQL queries. 
 
@@ -56,7 +56,7 @@ If you have never created a front-end to databases or reports for the web before
 
 Before you start, check if your database has 32-bit drivers. Without them, all further actions are meaningless. 
 
-Install IIS for [Windows XP, 2000, 2003](http://www.shotdev.com/asp/asp-installation/install-iis-windows-xp-2000-2003/),[Windows 7,Vista,8,8.1, for Windows Server 2008, 2008 r2, 2012, 2012 r2](https://docs.microsoft.com/en-us/iis/application-frameworks/running-classic-asp-applications-on-iis-7-and-iis-8/classic-asp-not-installed-by-default-on-iis).  
+Install IIS for [Windows XP, 2000, 2003](http://www.shotdev.com/asp/asp-installation/install-iis-windows-xp-2000-2003/),[Windows 7,Vista,8,8.1, for Windows Server 2008, 2008 r2, 2012, 2012 r2 and later](https://docs.microsoft.com/en-us/iis/application-frameworks/running-classic-asp-applications-on-iis-7-and-iis-8/classic-asp-not-installed-by-default-on-iis).  
 [Windows 10](https://docs.microsoft.com/en-us/answers/questions/370931/does-iis-in-windows-10-support-an-asp-web-site.html).
 
 Open IIS, find default application pool and set parameter "using 32 bit applications" to True.
@@ -88,7 +88,7 @@ Block of pages starts on `'// --- PAGES BLOCK START -----` construction and ends
 
 ## Page variables
 
-These variables contain /**SQL**/ which is DataTable or Filter values, or /**predefined values**/ YES/NO which Enable/Disable page functionality or blocks, or /**hybrid**/ which has it's own format as "variablename;sql construction" or "column/s list". 
+These variables contain **SQL** which is DataTable or Filter values, or **predefined values** YES/NO which Enable/Disable page functionality or blocks, or **hybrid** which has it's own format as "variablename;sql construction" or "column/s list". 
 Pages variables describe one separate page data and functionality.
 
 - g_Table_Caption_and_Info - report or form Name
