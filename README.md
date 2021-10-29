@@ -102,8 +102,8 @@ Pages variables describe one separate page data and functionality.
 - g_FilterDropdownsColumns - Example; select '%' as VendorName,'All vendors' as Vendor from dual union select VendorName,VendorName as Vendor from Vendors'
 
 - g_FilterDatalistsColumns - default type for Dropdown is <select><option> tags construction, but you can change it to datalist
-  
-- g_FiltersDefaultValues - Oracle: select '' as VendorName,'' as Vendor from dual. MSSQL: select '' as VendorName,'' as Vendor. 
+ 
+- g_FiltersDefaultValues - Oracle: select '' as VendorName,'' as Vendor from dual. MSSQL: select '' as VendorName,'' as Vendor
   
 - g_TableColumnsSortingAllowed - Allow Columns Sorting by click them (YES/NO)
   
