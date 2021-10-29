@@ -238,11 +238,11 @@ dim page
 	page=get_page()
 ' \--------------												
 ' / --- Default page which will be displayed if ?p=XX is ommited in url, or if invalid ?p= is set	 
-Dim g_DefaultPageCode	
+Dim g_DefaultPageCode
 	g_DefaultPageCode = "1"
 ' \ ------------------
 
-' /---- Web Portal name ---
+' /---- Web Portal name on top of menu in left upper corner ---
 Dim g_PortalName
 	g_PortalName = "San Francisco Purchasing Commodity Data"
 ' \------------------------
@@ -286,8 +286,14 @@ dim g_page_records_count
 ' More information you can get on https://www.connectionstrings.com/
 ' SQL server Example: 
 ' Application("my_data_source_1")="Provider=SQLNCLI11;server=localhost\SQLEXPRESS;database=YOURDATABASENAME;uid=DB_username;pwd=DB_user_password"
-dim g_page_datasource ' value of this variable is connection string to datasaource you want to use 
-	g_page_datasource = "sqlweb"
+dim g_page_datasource ' value of this variable is connection string name of the datasource you use globaly for all application
+' In case You have more than 1 databases or datasources you can define them all in global.asa as separate line but with unique name
+' as example:
+' Application("oracle") = "ConnectionStringHere_for ora db"
+' Application("mssql")  = "ConnectionStringHere for sql server db"
+' Application("mysql")  = "ConnectionStringHere for mysql db"
+' and then use these datasources on separate page in page block "case X" 			
+	g_page_datasource = "my_data_source_1"
 ' \-------------------------------
 
 ' /---- Brackets for columns with spaces ----------------
@@ -302,8 +308,8 @@ dim g_columns_end_bracket
 	g_columns_end_bracket="]"   ' ] for SQL Server , """" for Oracle,PostgreSQL,SQL Server,SQLite , "`" for MySQL,MariaDB
 ' \--------------------
 
-' /---- When You get or set date field in browser it's format in HTML5  is always YYYY-MM-DDTHH:MI and this string value replaces #DATE# part of function
-' To change this string to database date format You need to transform string to date using database engine rules 
+' /---- When You get or set date field in browser it's format in HTML5  is always YYYY-MM-DDTHH:MI and this string value replaces #DATE# part of function below
+' To change this string to database date format You need to transform string to date using database engine rules and internal functions 
 ' or create proper string using source string
 Dim g_DateFromTextToSQL   ' added for HTML5 universal date string value
 	g_DateFromTextToSQL = "CAST('#DATE#' as Date)" 'For SQL Server
@@ -313,7 +319,6 @@ Dim g_DateTimeFromTextToSQL   ' added for HTML5 universal date string value
 	g_DateTimeFromTextToSQL = "CAST('#DATE#:00' as DateTime)" ' Incorrect default browser datetime-local value is -> CAST('2021-06-02T08:51' as DateTime), Correct ->  CAST('2021-06-02T08:51:00' as DateTime) 'For SQL Server
 	'g_DateTimeFromTextToSQL = "TO_DATE( REPLACE('#DATE#','T',' ') ,'YYYY-MM-DD HH24:MI')" ' For ORACLE
 	
-
 ' /---- Columns Beautifier ----------------
 ' As you know table columns names may have strange names in database, not friendly for end users.To convert these names to 
 ' good looking, set "g_use_columns_beautifier" parameter to YES and also add all transformations to variable 
@@ -382,6 +387,9 @@ Dim g_GlobalVariablesValues
 	g_GlobalVariablesValues = func_GetGlobalVariablesValues()
 ' \-------------------------------------------------------------------------------------------------------------------------------
 
+' // --- PAGES BLOCK START ----- 
+' one page is described by it's name. Example: CASE "1" is page with code 1. CASE "XT" is page with code "XT". Gave your pages unique names.
+' Page start on CASE and ends on next CASE or on CASE ELSE construction below
 SELECT CASE cstr(page)
 	
 	CASE "1" 
@@ -557,6 +565,7 @@ SELECT CASE cstr(page)
 		response.redirect(page_name & "?p=" & g_DefaultPageCode) 
 		
 END SELECT
+' \\ --- PAGES BLOCK END ----- 
 
 ' \\ --- USER AREA END ------
 
