@@ -19,7 +19,8 @@ If you have never created a front-end to databases or reports for the web before
 
 - You know what is the database, may write SQL queries and understand tables relations and keys
 - Has PC/Server with operating system where Internet Information Server (IIS) may be installed
-- Has any database to which you can connect using connection strings listed on [connectionstrings.com](https://www.connectionstrings.com)
+- Has any database to which you can connect using 32bit driver and connection string listed on [connectionstrings.com](https://www.connectionstrings.com)
+- Any code editor with asp/sql syntax highlight
 
 ## What You get from the box?
 
@@ -69,7 +70,7 @@ for 64 bit OS run this file C:\WINDOWS\syswow64\odbcad32.exe
 Try to make test odbc connection to your database using proper driver. If test is OK then 
 visit [connectionstrings.com](https://www.connectionstrings.com) and try to find correct string and write it to the global.asa.
 
-Open swlsite.asp and change variables, listed below, to proper values you want. Before each variable there is short help attached directly in code.
+Open sqlsite.asp and change variables, listed below, to proper values you want. Before each variable there is short help attached directly in code.
 - g_DefaultPageCode
 - g_PortalName
 - g_page_datasource
@@ -80,4 +81,5 @@ Open swlsite.asp and change variables, listed below, to proper values you want. 
 
 ## Debug
 
-Errors checking is divided into 2 parts. 1 part can be accessed from Debug menu item. And other errors you can get directly from iis logs in folder C:\inetpub\logs\LogFiles\W3SVC1 or W3SVC2 and so on. 
+Errors checking is divided into 2 parts. First part can be accessed from Debug menu item while the application is running. 
+And other errors you can get directly from iis logs in folder C:\inetpub\logs\LogFiles\W3SVC1 or W3SVC2 and so on. 
