@@ -1,5 +1,11 @@
 # sqlweb
 
+![License](https://img.shields.io/badge/license-Apache%202.0-green)
+![Version](https://img.shields.io/badge/version-1.02-yellow)
+![Language](https://img.shields.io/badge/Language-ASP%20Classic-blue)
+![IIS](https://img.shields.io/badge/IIS%20version-Any-blue)
+![OS](https://img.shields.io/badge/OS-Any%20from%20Windows%202000-blue)
+
 This is framework to create web site by using only SQL queries. 
 
 If you have never created a front-end to databases or reports for the web before, then it's time to try it with this framework.
@@ -53,7 +59,7 @@ Install IIS for [Windows XP, 2000, 2003](http://www.shotdev.com/asp/asp-installa
 
 Open IIS, find default application pool and set parameter "using 32 bit applications" to True.
 
-Place sqlweb.asp and global.asa to default iis directory c:\inetpub\wwwroot\.
+Place [sqlsite.asp](https://github.com/vku1/sqlweb/blob/main/sqlsite.asp) and [global.asa](https://github.com/vku1/sqlweb/blob/main/global.asp) to iis directory c:\inetpub\wwwroot\.
 
 Install 32 bit odbc driver for Your database. 
 Check if it is present in odbc drivers list. 
@@ -62,9 +68,8 @@ for 64 bit OS run this file C:\WINDOWS\syswow64\odbcad32.exe
 
 Try to make test odbc connection to your database using proper driver. If test is OK then 
 visit [connectionstrings.com](https://www.connectionstrings.com) and try to find correct string and write it to the global.asa.
-by the default global.asa has some example strings
 
-variables:
+Open swlsite.asp and change variables, listed below, to proper values you want. Before each variable there is short help attached directly in code.
 - g_DefaultPageCode
 - g_PortalName
 - g_page_datasource
@@ -73,3 +78,6 @@ variables:
 - g_DateFromTextToSQL
 - g_DateTimeFromTextToSQL
 
+## Debug
+
+Errors checking is divided into 2 parts. 1 part can be accessed from Debug menu item. And other errors you can get directly from iis logs in folder C:\inetpub\logs\LogFiles\W3SVC1 or W3SVC2 and so on. 
