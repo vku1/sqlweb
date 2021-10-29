@@ -83,12 +83,13 @@ Open sqlsite.asp and change variables, listed below, to proper values you want. 
 
 ## Pages
 
-Single application may have unlimited pages count in it. Block of pages starts on ' // --- PAGES BLOCK START -----   construction and ends on ' \\ --- PAGES BLOCK END -----.
+Single application may have unlimited pages count in it. 
+Block of pages starts on // --- PAGES BLOCK START ----- construction and ends on \\ --- PAGES BLOCK END -----
 
 ## Page variables
 
 These variables contain /**SQL**/ which is DataTable or Filter values, or /**predefined values**/ YES/NO which Enable/Disable page functionality or blocks, or /**hybrid**/ which has it's own format as "variablename;sql construction" or "column/s list". 
-Pages variables describe one separate page data and functionality. ' // --- PAGES BLOCK START -----   
+Pages variables describe one separate page data and functionality.
 
 ' / -------- Page Global variables -------------
 - g_Table_Caption_and_Info - report or form Name
@@ -96,8 +97,8 @@ Pages variables describe one separate page data and functionality. ' // --- PAGE
 - g_SQL - sql select from database
 - g_FilterDropdownsAllowed - Filter enabled or not (YES/NO)
 - g_FilterDropdownsColumns - Example; select '%' as VendorName,'All vendors' as Vendor from dual union select VendorName,VendorName as Vendor from Vendors'
-- g_FilterDatalistsColumns - default type for Dropdown is <select><option> tags construction, but you can change it to datalist 
-- g_FiltersDefaultValues - select '' as VendorName,'' as Vendor from dual // dual is https://en.wikipedia.org/wiki/DUAL_table, for sql server the same will be -> select '' as VendorName,'' as Vendor -- https://en.wikipedia.org/wiki/DUAL_table
+- g_FilterDatalistsColumns - default type for Dropdown is <select><option> tags construction, but you can change it to datalist
+- g_FiltersDefaultValues - Oracle: select '' as VendorName,'' as Vendor from dual. MSSQL: select '' as VendorName,'' as Vendor. 
 - g_TableColumnsSortingAllowed - Allow Columns Sorting by click them (YES/NO)
 - g_TableColumnsDefaultSorting - Default sorting sql syntah may be very useful for default view in reports (example: "ColumnName1 ASC, ColumnName2 DESC")	
 - g_TableRowsUpdateAllowed - Allow Update operation on table (YES/NO)
