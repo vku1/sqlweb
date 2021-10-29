@@ -83,8 +83,8 @@ Open sqlsite.asp and change variables, listed below, to proper values you want. 
 
 ## Pages
 
-Single application may have unlimited pages count in it. 
-Block of pages starts on // --- PAGES BLOCK START ----- construction and ends on \\ --- PAGES BLOCK END -----
+sqlsite.asp single page application may have unlimited pages count in it. 
+Block of pages starts on `'// --- PAGES BLOCK START -----` construction and ends on `'\\ --- PAGES BLOCK END -----`
 
 ## Page variables
 
@@ -130,4 +130,4 @@ Pages variables describe one separate page data and functionality.
 ## Debug
 
 Errors checking is divided into 2 parts. First part can be accessed from Debug menu item while the application is running. 
-And other errors you can get directly from iis logs in folder C:\inetpub\logs\LogFiles\W3SVC1 or W3SVC2 and so on. 
+And other errors you can get directly from iis logs in folder `C:\inetpub\logs\LogFiles\W3SVC1` or `W3SVC2` and so on. 
