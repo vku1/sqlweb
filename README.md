@@ -25,6 +25,7 @@ If you have never created a front-end to databases or reports for the web before
 ## What You get from the box?
 
 - single page application (all reports/forms/filters in one page)
+- each page may have it's own database (but you can't mix databases on one page)
 - unified style for html elements (5 color schemas - 1 style)
 - vulnerability check (URL and forms check)
 - navigation menu 
@@ -41,7 +42,7 @@ If you have never created a front-end to databases or reports for the web before
 ## Benefits
 
 - The simpliest page needs only one variable which is also SQL query
-- The hardest page with full possible functionality You may get using 15 variables (one variable is query or constraint or hybrid)
+- The hardest page with full possible functionality You may get using 17 variables (each variable is query/constraint/hybrid)
 
 ## Limitations
 
