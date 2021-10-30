@@ -12,7 +12,10 @@ If you have never created a front-end to databases or reports for the web before
 
 ## Sample Page and Code
 
+**Page**
 ![Page](https://github.com/vku1/sqlweb/blob/main/sample_page.jpg)
+
+**Code**
 ![Code](https://github.com/vku1/sqlweb/blob/main/sample_code.jpg)
 
 ## Environment and Knowledges to start?
@@ -56,21 +59,26 @@ If you have never created a front-end to databases or reports for the web before
 
 Before you start, check if your database has 32-bit drivers. Without them, all further actions are meaningless. 
 
+#### IIS
 Install IIS for [Windows XP, 2000, 2003](http://www.shotdev.com/asp/asp-installation/install-iis-windows-xp-2000-2003/),[Windows 7,Vista,8,8.1, for Windows Server 2008, 2008 r2, 2012, 2012 r2 and later](https://docs.microsoft.com/en-us/iis/application-frameworks/running-classic-asp-applications-on-iis-7-and-iis-8/classic-asp-not-installed-by-default-on-iis).  
 [Windows 10](https://docs.microsoft.com/en-us/answers/questions/370931/does-iis-in-windows-10-support-an-asp-web-site.html).
 
 Open IIS, find default application pool and set parameter "using 32 bit applications" to True.
 
+#### sqlweb files
 Place [sqlsite.asp](https://github.com/vku1/sqlweb/blob/main/sqlsite.asp) and [global.asa](https://github.com/vku1/sqlweb/blob/main/global.asa) to iis directory c:\inetpub\wwwroot\.
 
+#### ODBC
 Install 32 bit odbc driver for Your database. 
 Check if it is present in odbc drivers list. 
 For 32 bit OS go to Control Panel\All Control Panel Items\Administrative Tools\Data sources ODBC, 
 for 64 bit OS run this file C:\WINDOWS\syswow64\odbcad32.exe
 
+#### Connection string
 Try to make test odbc connection to your database using proper driver. If test is OK then 
 visit [connectionstrings.com](https://www.connectionstrings.com) and try to find correct string and write it to the global.asa.
 
+#### Global variables
 Open sqlsite.asp and change variables, listed below, to proper values you want. Before each variable there is short help attached directly in code.
 - g_DefaultPageCode
 - g_PortalName
@@ -81,31 +89,29 @@ Open sqlsite.asp and change variables, listed below, to proper values you want. 
 - g_DateFromTextToSQL
 - g_DateTimeFromTextToSQL
 
-## Pages
-
+#### Pages
 sqlsite.asp single page application may have unlimited pages count in it. 
 Block of pages starts on `'// --- PAGES BLOCK START -----` construction and ends on `'\\ --- PAGES BLOCK END -----`
 
-## Page variables
-
+#### Page variables
 These variables contain **SQL** which is DataTable or Filter values, or **predefined values** YES/NO which Enable/Disable page functionality or blocks, or **hybrid** which has it's own format as "variablename;sql construction" or "column/s list". 
 Pages variables describe one separate page data and functionality.
 
-- g_Table_Caption_and_Info - report or form Name
+- g_Table_Caption_and_Info - Page Name
 
-- g_Form_Info_Help - use this to show users some additional information about form, description, comments, news or columns formats or other. To show content use main menu info/help item.
+- g_Form_Info_Help - use this to show additional information about page. This may be description, comments, or columns formats or other. By the default this info is hidden. To show content use main menu info/help item
  
-- g_SQL - sql select from database
+- g_SQL - SQL query to database on which is based page data
  
-- g_FilterDropdownsAllowed - Filter enabled or not (YES/NO)
+- g_FilterDropdownsAllowed - Filter enabled or not (YES/NO). Each filter is predefined dropdown . User can select values from dropdowns. 
 
-- g_FilterDropdownsColumns - Example; `select '%' as VendorName,'All vendors' as Vendor from dual union select VendorName,VendorName as Vendor from Vendors'`
+- g_FilterDropdownsColumns - Dropdown has id and description. For user we show description, but send to database id value. Example; `select '%' as Vendorid,'All vendors' as Vendor from dual union select Vendorid,VendorName as Vendor from Vendors'`
 
-- g_FilterDatalistsColumns - default type for Dropdown is `<SELECT>` tag construction, but you can change it to `<DATALIST>`. For more info Google it.
+- g_FilterDatalistsColumns - Default type for Dropdown is `<SELECT>` tag construction, but you can change it to `<DATALIST>`. For more info Google it.
 
-- g_FiltersDefaultValues - Oracle: `select '' as VendorName,'' as Vendor from dual`. MSSQL: `select '' as VendorName,'' as Vendor`
+- g_FiltersDefaultValues - Default values for filters to be activated on page first generation for user. Oracle: `select '' as Vendorid,'' as Vendor from dual`. MSSQL: `select '' as Vendorid,'' as Vendor`
   
-- g_TableColumnsSortingAllowed - Allow Columns Sorting by click them (YES/NO)
+- g_TableColumnsSortingAllowed - Allow Columns Sorting by clicking on them (YES/NO)
   
 - g_TableColumnsDefaultSorting - Default sorting sql syntah may be very useful for default view in reports (example: "ColumnName1 ASC, ColumnName2 DESC")	
   
@@ -117,9 +123,9 @@ Pages variables describe one separate page data and functionality.
   
 - g_DBTableIdColumn - Table ID column name. For Update we need real database table id column name (it may be only one, unique column)
   
-- g_DBTableFieldsListForInsertUpdate - List of columns You allow to insert/update. Always exclude id column. It is assumed that the ID column is autogenerated at the db level always
+- g_DBTableFieldsListForInsertUpdate - List of columns You allow to insert/update. Always exclude id column. It is assumed that the ID column is autogenerated at the db level always. Example: "artistname,created_on,album_id"
   
-- g_DBTableDropdownsForInsertUpdate - This is replacement of id columns in table to the readable values. Example: `idcolname1;select idcolname1,idcolname1textvalue from sometable1;idcolname2;select idcolname2,idcolname2textvalue from sometable2;`. Read func_GetFilterDropdownsIfExist info for this variable.
+- g_DBTableDropdownsForInsertUpdate - This is replacement of id columns in table to the readable values on insert/update. Example: `idcolname1;select idcolname1,idcolname1textvalue from sometable1;idcolname2;select idcolname2,idcolname2textvalue from sometable2;`. Read func_GetFilterDropdownsIfExist info for this variable.
   
 - g_DBTableDatalistsForInsertUpdate - Place table columns names there with "," separator and while insert/update operation default type for dropdown html `<SELECT>` will be changed to `<DATALIST>` which support search in it. Very good for long lists.
   
