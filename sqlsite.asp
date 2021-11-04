@@ -1,224 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title></title>
-	<meta name="name" content="SQL WEB framework">
-	<meta name="version" content="1.02">
-	<meta name="description" content="Single page website based only on SQL queries and asp variables">
-	<meta name="keywords" content="single page application, spa, sql, iis, asp, database frontend, front-end, web frontend">
-	<meta name="author" content="vku1">
-	<meta name="home page" content="https://github.com/vku1/sqlweb">
-<% 
-
-	' Adjusting Notepad++ to work with an ASP VBScript project. http://thewayofcoding.com/2016/11/adjusting-notepad-to-work-with-an-asp-vbscript-project/
-
-	'/----- Page Visual Style: Font for all elements and Colors ----
-	' You can use any installed in the system font.  
-		dim font_ 
-		font_ = "Courier" ' "Candara" ' '"Courier" "Verdana" "Arial Narrow" "Courier New" "Calibri" "Tahoma" 
-			
-		dim theme_color
-		dim theme_color_menu_bg
-		dim theme_color_menu_hover
-		dim theme_color_font
-		' to change visual elements colors unlock any line below by removing ' on left 	
-		' theme_color = "#5D6D7E": theme_color_menu_bg = "#eee"   : theme_color_menu_hover = "#aaaaaa": theme_color_font = "#778877" : theme_color_table_child="#f2f2f2" ' dark gray
-		 theme_color = "#818181": theme_color_menu_bg = "#FaFaFa": theme_color_menu_hover = "#cFcFcF": theme_color_font = "#666666" : theme_color_table_child="#f2f2f2" ' light gray
-		' theme_color = "#5499C7": theme_color_menu_bg = "#D6EAF8": theme_color_menu_hover = "#85C1E9": theme_color_font = "#21618C" : theme_color_table_child="#EBF5FB"' blue
-		' theme_color = "#52BE80": theme_color_menu_bg = "#A9DFBF": theme_color_menu_hover = "#27AE60": theme_color_font = "#196F3D" : theme_color_table_child="#E8F6F3" ' green
-		' theme_color = "#935116": theme_color_menu_bg = "#FDF2E9": theme_color_menu_hover = "#FAE5D3": theme_color_font = "#784212" : theme_color_table_child="#f2f2f2" ' orange
-	'\---------------------------------------	
-
-%>
-<style type="text/css">
-
-body{
-   background-image:url("body.jpg");
-   background-size:cover;
-   background-repeat:repeat;}
-
-/* Fixed sidenav, full height */
-.sidenav {
-  height: 100%;  width: 200px;  position: fixed;  z-index: 1;  top: 0;  left: 0;  background-color: <%=theme_color_menu_bg%>;  overflow-x: hidden;  padding-top: 20px; font: 100% <%=font_%>;}
-
-.sidenav img {
-width: 35%;
-padding: 6px 8px 10px 16px;}
-
-
-.sidenav-logo {
-width:90%;
-padding: 0px 0px 10px 14px;
-font-size: 20px;
-font-weight: bold;}
-
-.sidenav-GlobalObjects {
-position: relative; bottom: 0;
-width:90%;
-padding: 0px 0px 10px 14px;
-font-size: 16px;
-font-weight: bold;}
-
-/* Style the sidenav links and the dropdown button */
-.sidenav a {
-  padding: 6px 8px 6px 16px;
-  text-decoration: none;
-  color: <%=theme_color_font%>;
-  display: block;
-  border: none;
-  background: none;
-  width:100%;
-  text-align: left;
-  cursor: pointer;
-  outline: none;}
-
-.dropdown-btn {
-  padding: 6px 8px 6px 16px;
-  text-decoration: none;
-  color: <%=theme_color_font%>;
-  display: block;
-  border: none;
-  background: none;
-  width:100%;
-  text-align: left;
-  cursor: pointer;
-  outline: none;  
-  
-  font-weight:bold;
-  font-size: 12px;
-  font: 100% <%=font_%>;}
-
-/* On mouse-over */
-.sidenav a:hover, .dropdown-btn:hover {
-  color: #212121; /*font color for menu items on hover*/
-  background-color: <%=theme_color_menu_hover%>;}
-
-/* Add an active class to the active dropdown button */
-.active {
-  background-color: #f1f1f1; 
-  color: #010101;}
-
-/* Dropdown container (hidden by default). Optional: add a lighter background color and some left padding to change the design of the dropdown content */
-.dropdown-container {
-  display: none;
-  background-color: #f1f1f1; /*BG color of dropdown items*/
-  padding-left: 12px;
-  font-size: 12px;}
-
-/* Optional: Style the caret down icon */
-.fa-caret-down {
-  float: right;
-  padding-right: 8px;
-  font-family; <%=font_%>;}
-
-/* Main content */
-.main {
-  margin-left: 200px; /* Same as the width of the sidenav */
-  padding: 0px 10px;}
-
-table.DataTable {border-collapse: collapse;}
-table.DataTable caption {background: white; color: <%=theme_color%>;border: 1px solid <%=theme_color%>; font-weight:bold;padding: 10px;font-size:14px;}
-table.DataTable th {position: sticky; top: 0; z-index: 100; background-color: <%=theme_color%>;color: white; padding: 3px;} 
-
-table.DataTable tr:nth-child(even) {background-color: <%=theme_color_table_child%>;} 
-table.DataTable tr:hover {background-color: <%=theme_color_menu_hover%>;} 
-table.DataTable td {border-bottom: 1px solid #ddd; padding: 6px; color:<%=theme_color_font%>; } 
-
-table.tablefilter {table-layout: fixed; border-collapse: collapse;border: 1px solid <%=theme_color%>;}
-table.tablefilter caption {background: <%=theme_color%>; color: ivory; font-weight:bold; padding: 6px 1px 4px 1px;font-size:14px;}
-table.tablefilter td {padding: 6px;} 
-
-body   { font-family: <%=font_%>;font-size:12px;}
-input  { font-family: <%=font_%>; color: <%=theme_color_font%>;}
-select { font-family: <%=font_%>;}
-.main a:link,  .main a:visited, .main a:not([href]) {background-color: <%=theme_color%>;color: ivory; padding: 5px 7px;text-align: center;text-decoration: none;display: inline-block;}
-.main a:hover, .main a:active {background-color: <%=theme_color_menu_hover%>;}
-
-input[type=submit], input[type=reset] 
-{
-  background-color: <%=theme_color%>;
-  border: none;
-  color: ivory;
-  padding: 5px 5px;
-  text-decoration: none;
-  margin: 4px 2px;s
-  cursor: pointer;
-  font: 400 12px <%=font_%>;}
-input[type=submit]:hover, input[type=reset]:hover {background-color: <%=theme_color_menu_hover%>;} 
-
-select {
-    display: block;
-    color: <%=theme_color_font%>;
-    line-height: 1.3;
-    width: auto;
-    margin: 0;
-    font: 400 12px <%=font_%>;
-	border: 1px solid #aaa;
-    border-radius: 2px;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    --appearance: none;
-    background-color: white;
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;}
-	
-select::-ms-expand {display: none;}
-
-select:hover {
-    border-color: #888;}
-select:focus {
-    border-color: #aaa;
-    box-shadow: 0 0 1px 1px <%=theme_color_font%>;
-    box-shadow: 0 0 0 3px -moz-mac-focusring;
-    color: #222; 
-    outline: none;}
-</style>
-
-<%  ' -- timestamp generation for export menu item for filename ----
-	DIM TMS
-	TMS = DatePart("yyyy",Date) & Right("0" & DatePart("m",Date), 2) & Right("0" & DatePart("d",Date), 2) & "-" & Right("0" & Hour(Now), 2) & Right("0" & Minute(Now), 2) & Right("0" & Second(Now), 2)
-%>
-
-<script>
-
-function exportToExcel(elem) {
-  var table = document.getElementById("DataTable");
-  var html = table.outerHTML;
-  var url = 'data:application/vnd.ms-excel,' + escape(html); 
-  elem.setAttribute("href", url);
-  elem.setAttribute("download", "Export<%=TMS%>.xls"); // Choose the file name
-  return false;
-}
-
-function showNewsInfo() {
-  var x = document.getElementById("MsgInfo");
-  if (x.style.display === "none") {
-    x.style.display = "block";
-  } else {
-    x.style.display = "none";
-  }
-}
-
-function showDebugContent() {
-  var x = document.getElementById("DebugInfo");
-  if (x.style.display === "none") {
-    x.style.display = "block";
-  } else {
-    x.style.display = "none";
-  }
-}
-
-</script>
-</head>
-<body>
-
 <%
 ' // --- USER AREA START ------
-' in this area USER set main parameters by changing them
+' Application global  variables in user area starts with "g_" symbols.
+' User can set up application using these g_ variables globaly for all pages
+' and also use these variables on --PAGES AREA--. 
 
 ' / --- Maintenance block ----------------------------------
-'  check visitor ip and make actions based on this, as example there is block which can be uncommented in case of maintenance on server
+' Check visitor ip and make sample action. 
+' Example below: we check user Ip and, in case, this not you or server, where the page is hosted, we inform user about maintenance
 Dim g_clientIP  
 	g_clientIP = Request.Servervariables("REMOTE_ADDR") 
 	'if g_clientIP<>"localhost" and g_clientIP<>"192.168.1.1" then 
@@ -227,20 +15,23 @@ Dim g_clientIP
 	'end if
 ' \ -------------------
 
-' /-- Physical pagename of this file for links generation -------
-Dim page_name ' this script physical filename like this sqlsite.asp
-	page_name = func_getPageName()	
-' \---------------------------
+' /--- Connection string CODE stored in file global.asa --------------------	
+' How it works? You open global.asa file. Find line Application("my_data_source_1") = "ConnectionStringHere"
+' and change part between quotes "ConnectionStringHere" to the proper connection string.
+' More information you can get on https://www.connectionstrings.com/
+' You can find such connection string in global.asa for SQL server Example: 
+' Application("my_data_source_1")="Provider=SQLNCLI11;server=localhost\SQLEXPRESS;database=YOURDATABASENAME;uid=DB_username;pwd=DB_user_password"
 
-' /---- Page number ----------
-'If the default page number is ommited, then we redirect script to proper page (by default p=1)
-dim page
-	page=get_page()
-' \--------------												
-' / --- Default page which will be displayed if ?p=XX is ommited in url, or if invalid ?p= is set	 
-Dim g_DefaultPageCode
-	g_DefaultPageCode = "1"
-' \ ------------------
+' value of this variable is connection string name of the datasource you use globaly for all application
+dim g_page_datasource 
+' In case You have more than 1 databases or datasources you can define them all in global.asa as separate line but with unique name
+' as example:
+' Application("oracle_1") = "ConnectionStringHere_for ora db"
+' Application("mssql_1")  = "ConnectionStringHere for sql server db"
+' Application("mysql_77")  = "ConnectionStringHere for mysql db"
+' and then use these datasources on separate page in page block "case X" 			
+	g_page_datasource = "sqlweb"
+' \-------------------------------
 
 ' /---- Web Portal name on top of menu in left upper corner ---
 Dim g_PortalName
@@ -248,12 +39,6 @@ Dim g_PortalName
 ' \------------------------
 
 ' / --- Site menu generation --------------
-' B) Menu generation from text string
-dim g_generate_menu_from_string ' YES/NO
-' if g_generate_menu_from_string = "YES" then menu for project will be generated from string in variable g_MENU,
-' if g_generate_menu_from_string = "NO"  then menu for project will be set manualy by You from block #MANUAL_MENU (find this string below). HTML knowledge needed.
-	g_generate_menu_from_string="YES"
-
 dim g_MENU ' global variable for menu. 
 '  Menu Structure
 ' (Page_Name_without_submenu_items):Page_code;
@@ -262,89 +47,98 @@ dim g_MENU ' global variable for menu.
 	g_MENU = g_MENU & "(Home):1;"
 	g_MENU = g_MENU & "[Statistics]:1:{Years}:2:{Departments}:3:{Monthly by the department}:4:{Purchase orders};"
 	g_MENU = g_MENU & "[Chinook]:5:{Artists}:6:{Albums};"
+	g_MENU = g_MENU & "[Oracle]:11:{Album}:12:{Album test};"
 ' \ ------------------
 
-' /-----INPUT Fields -------------
-' Functionality to transform databases field types to proper input field type. Not supported by all the browsers
-' For more info: https://developer.mozilla.org/en-US/docs/Learn/Forms/HTML5_input_types
-' Recognised: text field, numeric, date, time, datetime-local. 
-' Date format is based on browser language in Chrome or Edge. For US use default, For Europe use "UK English".
-dim g_use_html5_fields_for_input ' YES/NO '<input type='date|number|text|...'
-	g_use_html5_fields_for_input = "YES" 
-' \-------------------	
+' /-- Physical filename of this script for links generation -------
+Dim page_name ' this script physical filename like this sqlsite.asp
+	page_name = func_getPageName()	
+' \---------------------------
 
-' /--- Maximum number of records on page --------------------	
-' Pagination added automaticaly count of records in html table for viewing (pagination block added automaticaly). 
-' For each separate page You can set its own count of visible records by using this variable in "page CASE block" 
+' /---- Page number ----------
+'If the default page number is ommited, then we redirect script to proper page (by default p=1)
+dim page
+	page=get_page()
+' \--------------
+											
+' / --- Default page which will be displayed if ?p=XX is ommited in url, or if invalid ?p= is set	 
+Dim g_DefaultPageCode
+	g_DefaultPageCode = "1"
+' \ ------------------
+
+' /---- User Interface style code. Predefined 1,2,3,4,5 codes ---
+Dim g_UIStyleCode
+	g_UIStyleCode = 2
+' \-------------------
+
+' /--- Maximum number of records on page (pagination) --------------------	
+' Number of records in html table for viewing (pagination block added automaticaly).
 dim g_page_records_count 
 	g_page_records_count = 20 
-' \-------------------------------
-
-' /--- Connection string CODE stored in file global.asa for datasource --------------------	
-' How it works? You open global.asa file. Find line Application("my_data_source_1") = "ConnectionStringHere"
-' and change part between quotes "ConnectionStringHere" to the proper connection string.
-' More information you can get on https://www.connectionstrings.com/
-' SQL server Example: 
-' Application("my_data_source_1")="Provider=SQLNCLI11;server=localhost\SQLEXPRESS;database=YOURDATABASENAME;uid=DB_username;pwd=DB_user_password"
-dim g_page_datasource ' value of this variable is connection string name of the datasource you use globaly for all application
-' In case You have more than 1 databases or datasources you can define them all in global.asa as separate line but with unique name
-' as example:
-' Application("oracle") = "ConnectionStringHere_for ora db"
-' Application("mssql")  = "ConnectionStringHere for sql server db"
-' Application("mysql")  = "ConnectionStringHere for mysql db"
-' and then use these datasources on separate page in page block "case X" 			
-	g_page_datasource = "my_data_source_1"
 ' \-------------------------------
 
 ' /---- Brackets for columns with spaces ----------------
 ' These parameters depend on the type of Database that You use
 ' They mean the generally accepted characters in which the columns enclose, in the name of which there are spaces.
-' For SQL Server if column contain space in it's name the column will looks like [my column name]. Where start bracket is "[", and end bracket is "]".
-' For Oracle "my column name"
-' For MySql `my column name`
+' For SQL Server if column contain space in it's name, the column will looks like [my column name]. 
+' Where start bracket is "[", and end bracket is "]".
+' For Oracle "my column name", both brackets " are the same
+' For MySql `my column name`, both brackets ` are the same
 dim g_columns_start_bracket
 dim g_columns_end_bracket
-	g_columns_start_bracket="[" ' [ for SQL Server , """" for Oracle,PostgreSQL,SQL Server,SQLite , "`" for MySQL,MariaDB
-	g_columns_end_bracket="]"   ' ] for SQL Server , """" for Oracle,PostgreSQL,SQL Server,SQLite , "`" for MySQL,MariaDB
+	g_columns_start_bracket="""" ' "[" for SQL Server,SQLite , """" for Oracle,PostgreSQL,SQL Server,SQLite , "`" for MySQL,MariaDB
+	g_columns_end_bracket=""""   ' "]" for SQL Server,SQLite , """" for Oracle,PostgreSQL,SQL Server,SQLite , "`" for MySQL,MariaDB
 ' \--------------------
 
 ' /---- When You get or set date field in browser it's format in HTML5  is always YYYY-MM-DDTHH:MI and this string value replaces #DATE# part of function below
-' To change this string to database date format You need to transform string to date using database engine rules and internal functions 
+' To change this string to database date format, You need to transform string to date using database engine rules and internal functions 
 ' or create proper string using source string
 Dim g_DateFromTextToSQL   ' added for HTML5 universal date string value
 	g_DateFromTextToSQL = "CAST('#DATE#' as Date)" 'For SQL Server
 	'g_DateFromTextToSQL = "TO_DATE( SUBSTR('#DATE#',1,10),'YYYY-MM-DD')" 'For ORACLE
+	'g_DateFromTextToSQL = "date('#DATE#')" ' For SQLITE
+	'g_DateFromTextToSQL = "to_date(REPLACE('#DATE#','T',' '),'YYYY-MM-DD') ' For PostgreSQL
+	'g_DateFromTextToSQL = "str_to_date('#DATE#','%Y-%m-%d')" ' for MariaDB
 	
+' Incorrect default browser datetime-local value for SQL Server example is -> CAST('2021-06-02T08:51' as DateTime), Correct ->  CAST('2021-06-02T08:51:00' as DateTime) 	
 Dim g_DateTimeFromTextToSQL   ' added for HTML5 universal date string value
-	g_DateTimeFromTextToSQL = "CAST('#DATE#:00' as DateTime)" ' Incorrect default browser datetime-local value is -> CAST('2021-06-02T08:51' as DateTime), Correct ->  CAST('2021-06-02T08:51:00' as DateTime) 'For SQL Server
+	g_DateTimeFromTextToSQL = "CAST('#DATE#:00' as DateTime)" ' 'For SQL Server
 	'g_DateTimeFromTextToSQL = "TO_DATE( REPLACE('#DATE#','T',' ') ,'YYYY-MM-DD HH24:MI')" ' For ORACLE
+	'g_DateTimeFromTextToSQL = "datetime('#DATE#')" ' For SQLITE
+	'g_DateTimeFromTextToSQL = "to_timestamp(REPLACE('#DATE#','T',' '),'YYYY-MM-DD HH24:MI')" ' For PostgreSQL
+	'g_DateTimeFromTextToSQL = "str_to_date('#DATE#','%Y-%m-%dT%H:%i')" ' for MariaDB
 	
 ' /---- Columns Beautifier ----------------
-' As you know table columns names may have strange names in database, not friendly for end users.To convert these names to 
-' good looking, set "g_use_columns_beautifier" parameter to YES and also add all transformations to variable 
-' "g_TableColumnsHeadersSubstitution" as pairs: [TableColumnName1;NameOfThisColumn1InReport;TableColumnName2;NameOfThisColumn2InReport;].
+' Table columns names may have strange names in database, not friendly for end users.
+' To convert these names to good looking, set "g_use_columns_beautifier" parameter 
+' to YES and also add all transformations to variable g_TableColumnsHeadersSubstitution 
+' as pairs: [TableColumnName1;The name You want to see 1;TableColumnName2;The name You want to see 2;].
 ' "g_TableColumnsHeadersSubstitution" is text string separated by ";" delimiter, where N element is database table column code and N+1 element is N column Userfriendly name.
 ' Example g_TableColumnsHeadersSubstitution="id;Identifier;fname;First Name;lname;Last Name;" 
 ' All founded column names with a code "fname" will be transformed to "First Name". No changes in database will be made.
-dim g_use_columns_beautifier ' YES/NO to use this functionality you need to fill variable "g_TableColumnsHeadersSubstitution=" with appropriate values
+dim g_use_columns_beautifier ' YES/NO to use this functionality you need to fill variable "g_TableColumnsHeadersSubstitution" 
 	g_use_columns_beautifier = "YES"
 dim g_use_columns_beautifier_compact ' YES/NO g_use_columns_beautifier_compact variable replaces 'SPACE' symbols in the second parts of pairs in g_TableColumnsHeadersSubstitution with html element '<br>', which is new line analogue. Try it to see effect.
  	g_use_columns_beautifier_compact="YES" 
 dim g_TableColumnsHeadersSubstitution
 	g_TableColumnsHeadersSubstitution = "" _ 
+	& "artist_name;Artist Name;" _
 	& "id;Identification Number;" _
 	& "purch_dept;Purchasing department;" _
 	& "fiscal_year;Fiscal year;" _
-	& "po_count;Purchase orders count;"
-
+	& "po_count;Purchase orders count"
+	
 Dim g_ColumnsSubstitutionKeyValue
-g_ColumnsSubstitutionKeyValue = split(g_TableColumnsHeadersSubstitution,";")
 ' \--------------------	
 
 ' /---- Debug info.  ----------------
-dim g_debug_flag ' if debug_="YES" then collect info for debugging to print to the same page. DO NOT activate in production! Create copy of page, and rename it in filesystem and in code, and then activate debug.
-	g_debug_flag="YES" ' NO
-dim g_debug_log ' All debug info will be collected in this variable 
+' When debug enabled You can access internal application logging info from menu "Debug log". 
+' DO NOT activate in production! 
+dim g_debug_flag 
+	g_debug_flag="NO" ' YES/NO
+	' You can uncomment line below to prevent access to debug for users except the ip address of your pc. in example your ip address is 192.168.1.1
+	'if g_clientIP="192.168.1.1" then g_debug_flag="YES" else g_debug_flag="NO"
+dim g_debug_log ' debug log messages in this variable
 ' \--------------------	
 
 ' /---- Subtotals in table for numeric columns  -------
@@ -353,31 +147,34 @@ dim g_debug_log ' All debug info will be collected in this variable
 dim g_ApplySubtotalsForNumericColumns
 	g_ApplySubtotalsForNumericColumns="YES"
 ' \--------------------	
-	
-Dim g_OperationTypeInsertUpdate ' Global variable for sharing operation type on record Insert or Update																						   
+
+' /---- Global variable for sharing operation type on record Insert/Update/Delete 
+Dim g_OperationTypeInsertUpdate 
+' \---------------------------- 
 
 ' / -------- Page Global variables -------------
 Dim g_Table_Caption_and_Info					 ' report or form Name
-Dim g_Form_Info_Help							 ' use this to show users some additional information about form, description, comments, news or columns formats or other. To show content use main menu info item.
+Dim g_Form_Info_Help							 ' use this to show users some additional information about form, description, comments, news or columns formats or other. To show content use main menu Info/Help item.
 Dim g_SQL 										 ' sql select from database
 Dim g_FilterDropdownsAllowed					 ' Filter enabled or not (YES/NO)
 Dim g_FilterDropdownsColumns					 ' Example; select '%' as VendorName,'All vendors' as Vendor from dual union select VendorName,VendorName as Vendor from Vendors'
 Dim g_FilterDatalistsColumns					 ' default type for Dropdown is <select><option> tags construction, but you can change it to datalist 
 Dim g_FiltersDefaultValues						 ' select '' as VendorName,'' as Vendor from dual // dual is https://en.wikipedia.org/wiki/DUAL_table, for sql server the same will be -> select '' as VendorName,'' as Vendor -- https://en.wikipedia.org/wiki/DUAL_table
-Dim g_TableColumnsSortingAllowed				 ' Allow Columns Sorting by click them (YES/NO)
+Dim g_TableColumnsSortingAllowed				 ' Allow Columns Sorting by click on them (YES/NO). First click ASC, second click DESC and so on.
 Dim g_TableColumnsDefaultSorting				 ' Default sorting sql syntah may be very useful for default view in reports (example: "ColumnName1 ASC, ColumnName2 DESC")	
 Dim g_TableRowsUpdateAllowed					 ' Allow Update operation on table (YES/NO)
 Dim g_TableRowsInsertAllowed					 ' Allow Insert operation on table (YES/NO)
+Dim g_TableRowsDeleteAllowed					 ' Allow delete operation on table (YES/NO) ' Delete button is Edit window. Also activate g_TableRowsUpdateAllowed. 
 Dim g_DBTableForInsertUpdate					 ' For Insert/Update we need real database table name (it may be only one, unique table name)
 Dim g_DBTableIdColumn							 ' For Update we need real database table id column name (it may be only one, unique column)
 Dim g_DBTableFieldsListForInsertUpdate
 Dim g_DBTableDropdownsForInsertUpdate            ' default type for Dropdown is <select><option> tags construction, but you can change it to datalist . Read func_GetFilterDropdownsIfExist info for this variable.
 Dim g_DBTableDatalistsForInsertUpdate            ' change default tag construction from <select><option> to <input list><datalist><option> which support search in it. Very good for long lists.
 Dim g_DBTableMultipleDropdownsFieldsForInsert    ' List of these values will be repeated N times while inserting rows
-Dim g_TableUpdateInsertLayoutVerticalHorizontal	 ' For Operations Update and Insert data layout vertical or horisontal (V/H). For tables containing more than 10 columns, may be very useful	
+Dim g_TableUpdateInsertLayoutVerticalHorizontal	 ' For Operations Update and Insert data layout vertical or horisontal (V/H). For tables containing more than 10 columns, may be very useful
 ' \ --------------------------------------------	
 
-' /--------- Global Variables - Dropdowns in top of menu which values will be automatically applied to all filters and datatables 
+' /--------- Global Variables - Dropdown in top of menu which selected value will be automatically applied to all filters and datatables
 ' for each variable will be created session variable with value selected  by the user
 ' after selecting value, you will be redirected to main menu and value will be used in url string+in session variable; 
 ' at next steps value will be extracted from session variable 
@@ -386,16 +183,18 @@ Dim g_GlobalVariables
 Dim g_GlobalVariablesValues
 	g_GlobalVariablesValues = func_GetGlobalVariablesValues()
 ' \-------------------------------------------------------------------------------------------------------------------------------
+' \\ --- USER AREA END ------
 
-' // --- PAGES BLOCK START ----- 
+
+' // --- PAGES AREA START ----- 
 ' one page is described by it's name. Example: CASE "1" is page with code 1. CASE "XT" is page with code "XT". Gave your pages unique names.
 ' Page start on CASE and ends on next CASE or on CASE ELSE construction below
 SELECT CASE cstr(page)
-	
+
 	CASE "1" 
 		
 		g_Table_Caption_and_Info = "Yearly Statistics"
-		g_Form_Info_Help = ""	
+		g_Form_Info_Help = "Cumulative statistics of purchase orders count by the year. Push ... to get detailed info about monthly statistics."	
 		
 		g_SQL =         " select [fiscal_year],count([purchase_order]) po_count,'<a href=''sqlsite.asp?fiscal_year='+[fiscal_year]+'&purch_dept=%25&p=2''>...</a>' Info from ( "
         g_SQL = g_SQL & " select distinct CAST(DATEPART(yyyy, [post_date_orig]) AS varchar(4) ) [fiscal_year],[purchase_order]  from [test_sqlweb_db].[dbo].[purchasing_commodity] "
@@ -403,14 +202,14 @@ SELECT CASE cstr(page)
         g_SQL = g_SQL & "  "
         		
 		g_FilterDropdownsAllowed = "NO"
-		g_FilterDropdownsColumns = "select '%' as statusname, 'All statuses' as comment union select statusname,statuscomment from dbo.status"
+		g_FilterDropdownsColumns = "select '%' as statusname, 'All statuses' as statuscomment union select statusname,statuscomment from dbo.status"
 		g_FilterDatalistsColumns = ""					   
 		g_FiltersDefaultValues = "select '' statusname,'' statuscomment"
 		
 		g_TableColumnsSortingAllowed = "YES" 
 		g_TableColumnsDefaultSorting = "fiscal_year asc"
         
-	    g_TableRowsUpdateAllowed = "NO" : g_TableRowsInsertAllowed  = "NO" 
+	    g_TableRowsUpdateAllowed = "NO" : g_TableRowsInsertAllowed  = "NO" : g_TableRowsDeleteAllowed = "NO"
 		g_DBTableForInsertUpdate="dbo.purchasing_commodity"
 		g_DBTableIdColumn="id"
 		g_DBTableFieldsListForInsertUpdate=""
@@ -442,7 +241,7 @@ SELECT CASE cstr(page)
 		g_TableColumnsSortingAllowed = "YES" 
 		g_TableColumnsDefaultSorting = "fiscal_year asc"
         
-	    g_TableRowsUpdateAllowed = "NO" : g_TableRowsInsertAllowed  = "NO" 
+	    g_TableRowsUpdateAllowed = "NO" : g_TableRowsInsertAllowed  = "NO" : g_TableRowsDeleteAllowed = "NO"
 		g_DBTableForInsertUpdate="dbo.purchasing_commodity"
 		g_DBTableIdColumn="id"
 		g_DBTableFieldsListForInsertUpdate=""
@@ -473,7 +272,7 @@ SELECT CASE cstr(page)
 		g_TableColumnsSortingAllowed = "YES" 
 		g_TableColumnsDefaultSorting = "fiscal_year,fiscal_month,purch_dept asc"
         
-	    g_TableRowsUpdateAllowed = "NO" : g_TableRowsInsertAllowed  = "NO" 
+	    g_TableRowsUpdateAllowed = "NO" : g_TableRowsInsertAllowed  = "NO" : g_TableRowsDeleteAllowed = "NO"
 		g_DBTableForInsertUpdate="dbo.purchasing_commodity"
 		g_DBTableIdColumn="id"
 		g_DBTableFieldsListForInsertUpdate=""
@@ -501,7 +300,7 @@ SELECT CASE cstr(page)
 		g_TableColumnsSortingAllowed = "YES" 
 		g_TableColumnsDefaultSorting = "fiscal_year,fiscal_month,purch_dept asc"
         
-	    g_TableRowsUpdateAllowed = "NO" : g_TableRowsInsertAllowed  = "NO" 
+	    g_TableRowsUpdateAllowed = "NO" : g_TableRowsInsertAllowed  = "NO" : g_TableRowsDeleteAllowed = "NO"
 		g_DBTableForInsertUpdate="dbo.purchasing_commodity"
 		g_DBTableIdColumn="id"
 		g_DBTableFieldsListForInsertUpdate=""
@@ -526,7 +325,7 @@ SELECT CASE cstr(page)
 		g_TableColumnsSortingAllowed = "YES" 
 		g_TableColumnsDefaultSorting = "artist_name asc"
         
-	    g_TableRowsUpdateAllowed = "YES" : g_TableRowsInsertAllowed  = "YES" 
+	    g_TableRowsUpdateAllowed = "YES" : g_TableRowsInsertAllowed  = "YES" : g_TableRowsDeleteAllowed = "YES"
 		g_DBTableForInsertUpdate="artist"
 		g_DBTableIdColumn="artistid"
 		g_DBTableFieldsListForInsertUpdate="name"
@@ -552,11 +351,71 @@ SELECT CASE cstr(page)
 		g_TableColumnsSortingAllowed = "YES" 
 		g_TableColumnsDefaultSorting = "album_title asc"
         
-	    g_TableRowsUpdateAllowed = "YES" : g_TableRowsInsertAllowed  = "YES" 
+	    g_TableRowsUpdateAllowed = "YES" : g_TableRowsInsertAllowed  = "YES" : g_TableRowsDeleteAllowed = "YES"
 		g_DBTableForInsertUpdate="album"
 		g_DBTableIdColumn="albumid"
 		g_DBTableFieldsListForInsertUpdate="title,artistid"
-		g_DBTableDropdownsForInsertUpdate = "artistid;select null artistid,'' artist_name union select artistid,name artist_name from artist order by artist_name"
+		g_DBTableDropdownsForInsertUpdate = "artistid;select '' artistid,'' artist_name union select artistid,name artist_name from artist order by artist_name"
+		g_DBTableDatalistsForInsertUpdate = ""
+		g_DBTableMultipleDropdownsFieldsForInsert="artistid"
+		g_TableUpdateInsertLayoutVerticalHorizontal="V"
+	
+	CASE "11" 
+		
+		g_page_datasource = "OraCH"
+		
+		g_DateFromTextToSQL = "TO_DATE( SUBSTR('#DATE#',1,10),'YYYY-MM-DD')"
+	    g_DateTimeFromTextToSQL = "TO_DATE( REPLACE('#DATE#','T',' ') ,'YYYY-MM-DD HH24:MI')"
+		
+		g_PortalName = "Oracle Chinook Album"
+		
+		g_Table_Caption_and_Info = " Albums " 
+			
+		g_Form_Info_Help = ""	
+        g_SQL = " select albumid,a.artist_name,title album_title from album al inner join (select artistid,name artist_name from artist) a on al.artistid=a.artistid "
+        		
+		g_FilterDropdownsAllowed = "NO"
+		g_FilterDropdownsColumns = ""
+		g_FilterDatalistsColumns = ""
+		g_FiltersDefaultValues = ""
+		
+		g_TableColumnsSortingAllowed = "YES" 
+		g_TableColumnsDefaultSorting = "album_title asc"
+        
+	    g_TableRowsUpdateAllowed = "YES" : g_TableRowsInsertAllowed  = "YES" : g_TableRowsDeleteAllowed = "YES"
+		g_DBTableForInsertUpdate="album"
+		g_DBTableIdColumn="albumid"
+		g_DBTableFieldsListForInsertUpdate="title,artistid"
+		g_DBTableDropdownsForInsertUpdate = "ARTISTID;select 0 artistid,'' artist_name from dual union select artistid,name artist_name from artist order by artist_name"
+		g_DBTableDatalistsForInsertUpdate = ""
+		g_DBTableMultipleDropdownsFieldsForInsert="artistid"
+		g_TableUpdateInsertLayoutVerticalHorizontal="V"
+
+	CASE "12" 
+		
+		g_page_datasource = "OraCH"
+		g_DateFromTextToSQL = "TO_DATE( SUBSTR('#DATE#',1,10),'YYYY-MM-DD')"
+		g_DateTimeFromTextToSQL = "TO_DATE( REPLACE('#DATE#','T',' ') ,'YYYY-MM-DD HH24:MI')"
+		g_PortalName = "Oracle Album test"
+		
+		g_Table_Caption_and_Info = " Albums test " 
+			
+		g_Form_Info_Help = ""	
+        g_SQL = " select albumid,a.artist_name,title album_title, summa, created_on,modified_on from album_test al inner join (select artistid,name artist_name from artist) a on al.artistid=a.artistid "
+        		
+		g_FilterDropdownsAllowed = "NO"
+		g_FilterDropdownsColumns = ""
+		g_FilterDatalistsColumns = ""
+		g_FiltersDefaultValues = ""
+		
+		g_TableColumnsSortingAllowed = "YES" 
+		g_TableColumnsDefaultSorting = "album_title asc"
+        
+	    g_TableRowsUpdateAllowed = "YES" : g_TableRowsInsertAllowed  = "YES" : g_TableRowsDeleteAllowed = "YES"
+		g_DBTableForInsertUpdate="album_test"
+		g_DBTableIdColumn="albumid"
+		g_DBTableFieldsListForInsertUpdate="title,artistid,summa,created_on,modified_on"
+		g_DBTableDropdownsForInsertUpdate = "ARTISTID;select 0 artistid,'' artist_name from dual union select artistid,name artist_name from artist order by artist_name"
 		g_DBTableDatalistsForInsertUpdate = ""
 		g_DBTableMultipleDropdownsFieldsForInsert="artistid"
 		g_TableUpdateInsertLayoutVerticalHorizontal="V"
@@ -565,15 +424,18 @@ SELECT CASE cstr(page)
 		response.redirect(page_name & "?p=" & g_DefaultPageCode) 
 		
 END SELECT
-' \\ --- PAGES BLOCK END ----- 
+' \\ --- PAGES AREA END ----- 
 
-' \\ --- USER AREA END ------
 
 ' / ---- Generate page block ------------------------------------------------------------------------------------------------------------------------------------------------------
 
+    ' /--- Html head styles css scripts
+    response.write func_printHeadStylesScripts(g_UIStyleCode)
+	' \----------
+    
 	call debug_write ("Start page generator","")
-	' /---  You can uncomment next line to write user activity log to database. May be used if you want to register all the details of visited page in database. But You need to investigate write_log function for more info)
-	' write_log("Some message here")
+	' /---  You can uncomment next line to write user activity log to database. May be used if you want to register all the details of visited page in database. But You need to investigate write_log sub for more info)
+	' call write_log("Some message here!")
 	' \ --------
 
 	' / --- Check for Vulnerable elements in url query string ----
@@ -633,7 +495,7 @@ Sub debug_write (in_msg,in_termination_flag)
 				</p>
 			</div>
 			<%
-			response.end
+			'response.end
 		end if
 	end if
 End Sub
@@ -660,53 +522,25 @@ End Function
 
 Function func_CreateMenuHTML()
 	
-	if g_generate_menu_from_string="NO" then
-	' / --- #MANUAL_MENU block example
-		%>
-			<div class='sidenav'>
-				<img src='your_image_url_here.jpg'>
-				
-				<a href="<%=page_name%>">Home</a>
-				<button class='dropdown-btn'>Statistics<i class='fa fa-caret-down'></i></button>
-					<div class='dropdown-container'>
-						<a href='<%=page_name%>?p=1'>Years</a>
-						<a href='<%=page_name%>?p=2'>Departments</a>
-						<a href='<%=page_name%>?p=3'>Monthly by the department</a>
-						<a href='<%=page_name%>?p=4'>Purchase orders</a>
-					</div>
-				<button class='dropdown-btn'>Chinook<i class='fa fa-caret-down'></i></button>
-					<div class='dropdown-container'>
-						<a href='<%=page_name%>?p=5'>Artists</a>
-						<a href='<%=page_name%>?p=6'>Albums</a>
-					</div>
-				<%="<a id='downloadLink' onclick='exportToExcel(this)'>Export to excel</a>"%>
-				<%="<a href='#' onclick='showNewsInfo()'>Info/Help</a>"%>			
-			</div>
-		<%
-	' \ --- #MANUAL_MENU block end	
-	else
-
-		response.write func_GenerateMenu()
-
-	end if
+	response.write func_GenerateMenu()
 
 	' JS script below for menu items dropdowns
 	%>
 	<script>
-				var dropdown = document.getElementsByClassName("dropdown-btn");
-				var i;
-				for (i = 0; i < dropdown.length; i++) {
-				  dropdown[i].addEventListener("click", function() {
-					this.classList.toggle("active");
-					var dropdownContent = this.nextElementSibling;
-					if (dropdownContent.style.display === "block") {
-					  dropdownContent.style.display = "none";
-					} else {
-					  dropdownContent.style.display = "block";
-					}
-				  });
-				}
-			</script>
+		var dropdown = document.getElementsByClassName("dropdown-btn");
+		var i;
+		for (i = 0; i < dropdown.length; i++) {
+		  dropdown[i].addEventListener("click", function() {
+			this.classList.toggle("active");
+			var dropdownContent = this.nextElementSibling;
+			if (dropdownContent.style.display === "block") {
+			  dropdownContent.style.display = "none";
+			} else {
+			  dropdownContent.style.display = "block";
+			}
+		  });
+		}
+	</script>
 	<%
 	
 End Function
@@ -714,21 +548,24 @@ End Function
 Function func_CreateTableHTML()  
 	
 	Dim page_ret_
-	dim prc_ 
-	' read previous stage parameters if they exists
+	dim prc
+	
 	prc = CInt( NVL( request.querystring("prc") ,"1") )
 	id_value = Request.QueryString("iv")
 	
-	Select  Case Request.QueryString("op") 'operation_type = Request.QueryString("op") ' i - insert (add new), e - edit row
+	 ' i - insert (add new), e - edit row
+	Select  Case Request.QueryString("op") 
 			Case "i"
 				g_OperationTypeInsertUpdate = "INSERT"
 			Case "e" 
 				g_OperationTypeInsertUpdate = "UPDATE"
+			Case "d" 
+				g_OperationTypeInsertUpdate = "DELETE"	
 			Case else
 				g_OperationTypeInsertUpdate = ""
 	End Select
 
-	action = Request.QueryString("a")          ' a - start action if it is initiated, mean button submit pressed after update or insert row
+	action = Request.QueryString("a")          ' a - start action if it is initiated, mean button submit pressed after update/insert/delete row
 	call debug_write ("func_CreateTableHTML: id_value=" & id_value & " g_OperationTypeInsertUpdate=" & g_OperationTypeInsertUpdate & " action=" & action,"")
 	
 	if action="a" then
@@ -741,6 +578,10 @@ Function func_CreateTableHTML()
 			UPDATE_SQL=func_CreateInsertUpdateStatementFromFormValues(g_DBTableForInsertUpdate, func_CheckIfBracketsQuotesNeeded(g_DBTableIdColumn) & "=" & id_value) 
 			page_ret_ = page_ret_ & execute_SCRIPT(UPDATE_SQL)
 		end if	
+		if g_OperationTypeInsertUpdate="DELETE" and g_TableRowsDeleteAllowed="YES" then 
+			DELETE_SQL=func_CreateInsertUpdateStatementFromFormValues(g_DBTableForInsertUpdate, func_CheckIfBracketsQuotesNeeded(g_DBTableIdColumn) & "=" & id_value) 
+			page_ret_ = page_ret_ & execute_SCRIPT(DELETE_SQL)
+		end if	
 		page_ret_ = page_ret_ &  "<a href='"& page_name &"?p=" & page & "&prc=" & prc & "'>Return to form</a><br>"
 		func_CreateTableHTML = page_ret_: Exit Function
 	
@@ -749,12 +590,12 @@ Function func_CreateTableHTML()
 		select case g_OperationTypeInsertUpdate
 			   case "INSERT"
 					if g_TableRowsInsertAllowed="YES" then
-						page_ret_ = page_ret_ & add_rowRS("Add Record<br><br>"    & g_Table_Caption_and_Info,g_DBTableFieldsListForInsertUpdate,g_DBTableDropdownsForInsertUpdate)
+						page_ret_ = page_ret_ & add_rowRS("Add Record<br><br>"   & g_Table_Caption_and_Info,g_DBTableFieldsListForInsertUpdate,g_DBTableDropdownsForInsertUpdate)
 					end if	
 
-			   case "UPDATE"
+			   case "UPDATE","DELETE"
 					if g_TableRowsUpdateAllowed="YES" then
-						page_ret_ = page_ret_ &  edit_rowRS("Edit Record<br><br>" & g_Table_Caption_and_Info,id_value,g_DBTableFieldsListForInsertUpdate,g_DBTableDropdownsForInsertUpdate)
+						page_ret_ = page_ret_ & edit_rowRS("Edit Record<br><br>" & g_Table_Caption_and_Info,id_value,g_DBTableFieldsListForInsertUpdate,g_DBTableDropdownsForInsertUpdate)
 					end if	
 					
 				case else
@@ -824,7 +665,8 @@ End Function
 Function func_CreateFiltersHTML(g_FilterDropdownsColumns)
 
 	if g_FilterDropdownsAllowed="YES" then
-		if Request.QueryString("op")<>"i" and Request.QueryString("op")<>"e" and Request.QueryString("a")<>"a" then ' if mode edit or insert or button "submit data" pressed, we disable filter
+	    ' if mode edit or insert or button "submit data" pressed, we disable filter
+		if Request.QueryString("op")<>"i" and Request.QueryString("op")<>"e" and Request.QueryString("a")<>"a" then 
 		
 			dim ret_
 			dim dd  ' array of filter selects
@@ -971,9 +813,9 @@ Function func_GetGlobalFilter(in_rs)
 		
 End Function
 
-Function execute_SCRIPT(in_tsql)
+Function execute_SCRIPT(in_sql)
 
-    call debug_write ("Execute Script: " & in_tsql,"")
+    call debug_write ("Execute Script: " & in_sql,"")
 	on error resume next
 
 	Dim cn,cns
@@ -981,22 +823,23 @@ Function execute_SCRIPT(in_tsql)
     Set cn  = CreateObject("ADODB.Connection")
 		cns = Application(g_page_datasource)
 	cn.open cns
-	cn.execute(in_tsql)
+	cn.execute(in_sql)
 	cn.close
 	set cn = nothing
 
 	if err.number=0 then
 		msg_ = "<br>Done without errors.<br> " 
 	else
-		msg_ = err.number & " " & err.description & " " 
+		msg_ = "Error: " & err.number & " " & err.description & " " & in_sql
 	end if
-	call debug_write(msg_,"")
+	call debug_write("execute_SCRIPT: " & msg_,"")
 	execute_SCRIPT = msg_
 	
 End Function
 
 Function func_CreateInsertUpdateStatementFromFormValues(in_table,where_statement)
-    dim line_a
+    
+	dim line_a
 	dim line_b
 	dim tmplt_a,tmplt_b, operations_count_, arr_
 	dim vulnerability_result
@@ -1005,6 +848,10 @@ Function func_CreateInsertUpdateStatementFromFormValues(in_table,where_statement
 	dim multiple_
 	
 	'/ -------  Template creation  ------
+	if g_OperationTypeInsertUpdate = "DELETE" then
+		ret_ = "delete from " & in_table & " where " & where_statement
+	end if
+	
     if g_OperationTypeInsertUpdate = "INSERT" then
 
 			operations_count_="" ' minimal count of operations for insert is=1*1*1, but for multiple values  1*Xelements*Yelements 
@@ -1047,7 +894,7 @@ Function func_CreateInsertUpdateStatementFromFormValues(in_table,where_statement
 					values_ = values_ & "NULL" & "|"
 					fieldName = mid(Item,1,len(Item)-1)
 					tmplt_a = tmplt_a & func_CheckIfBracketsQuotesNeeded(fieldName) & ","
-					tmplt_b = tmplt_b & "NULL," ' fieldValue -> replace(fieldValue,fT,fT&fT)  quote replaced with doublequotes
+					tmplt_b = tmplt_b & "NULL," 
 				
 				end if
 				
@@ -1153,7 +1000,7 @@ End Function
 
 Function get_htmlRS()
 
-'on error resume next 
+on error resume next 
 
 	Dim rs, rc_null,cn
 	dim res_
@@ -1193,6 +1040,11 @@ Function get_htmlRS()
     Set rs = CreateObject("ADODB.Recordset")
 	cn=Application(g_page_datasource)
 	
+	if g_page_records_count<=0 then
+		call debug_write ("get_htmlRS(). Something is wrong with a value of global variable g_page_records_count=" & g_page_records_count,"")
+		exit function
+	end if	
+	
 	rs.PageSize = g_page_records_count ' records count on 1 data table page
 	rs_page_size = rs.PageSize
 	rs.CacheSize = rs.PageSize
@@ -1200,12 +1052,11 @@ Function get_htmlRS()
 	
 	rs.open sSQL, cn , 0, 1, 1 'adOpenForwardOnly, adLockReadOnly, adCmdText ' https://www.w3schools.com/asp/met_rs_open.asp
 	
-	'if err.number<>0 then 
-	'	response.write ssql
-	'	response.end
-	'end if
+	if err.number<>0 then 
+		call debug_write ("get_htmlRS(). Something is wrong in query : " & ssql & "<br>" & err.number & " " & err.description,"")
+		exit function
+	end if
 	
-    
 			'#### GlobalVariablesFilter######
 				dim filter_
 				filter_ = func_GetGlobalFilter(rs)
@@ -1268,7 +1119,7 @@ Function get_htmlRS()
 	
 	if g_TableRowsUpdateAllowed="YES" or g_TableRowsInsertAllowed="YES" then
 		if id_column="" then 
-			get_htmlRS="ID column not found but is necessary for records edition. Check Report settings syntax." 
+			get_htmlRS="ID column not found but is necessary for records edition. Check this form settings syntax." 
 			Exit Function
 		end if	
 	end if
@@ -1295,12 +1146,12 @@ Function get_htmlRS()
 				
 				if len(res_)>0 then
 					res_ = replace(res_,",","")
-					res_ = replace(res_,"<font color='red'><b>","")
-					res_ = replace(res_,"</b></font>","")
+					'res_ = replace(res_,"<font color='red'><b>","")
+					'res_ = replace(res_,"</b></font>","")
 				end if
 				
 				if isnumeric(res_)=true then
-					table=table & "<td align='right'>" & ann & "</td>" 
+					table=table & "<td align='right'>" & ann & "</td>" ' datatable numeric values
 					subtotals(i)=subtotals(i)+1
 					subtotals_values(i) = subtotals_values(i) + res_	  ' description of the bug 800a000d https://forums.adobe.com/thread/156021 - sql server datatype decimal can't be identified by vbscript
 				    subtotals_formula(i) = subtotals_formula(i) & "+" & res_
@@ -1309,14 +1160,15 @@ Function get_htmlRS()
 					ft_inputtype = rs_field_db_type(rs.fields(i).type,rs.fields(i).name)
 					if ft_inputtype = "date" then  ' convert all the dates to one universal format YYYY/MM/DD 
 						html_cell="" 
-						html_cell=year(rs.fields(i).value) & "/"
-						if month(rs.fields(i).value)<10 then html_cell = html_cell & "0" & month(rs.fields(i).value) & "/" else html_cell = html_cell & month(rs.fields(i).value) & "/"
-						if day(rs.fields(i).value)<10 then html_cell = html_cell & "0" & day(rs.fields(i).value) else html_cell = html_cell & day(rs.fields(i).value)
+						html_cell=func_DateTimeFormat("yyyy/mm/dd",rs.fields(i).value) 'func_DateTimeFormat("yyyy-mm-ddThh:mi",rs.fields(i).value)
+						'html_cell=year(rs.fields(i).value) & "/"
+						'if month(rs.fields(i).value)<10 then html_cell = html_cell & "0" & month(rs.fields(i).value) & "/" else html_cell = html_cell & month(rs.fields(i).value) & "/"
+						'if day(rs.fields(i).value)<10 then html_cell = html_cell & "0" & day(rs.fields(i).value) else html_cell = html_cell & day(rs.fields(i).value)
 						
 					else
 						html_cell = ann
 					end if
-					' datatable cells values
+					' datatable non numeric values
 					table=table & "<td>" & html_cell & "</td>" 
 					
 				end if	
@@ -1508,12 +1360,7 @@ Function add_rowRS(g_Table_Caption_and_Info,editable_cols,g_DBTableDropdownsForI
 			if dd_ifexist<>"" then
 				arr_Two_Value = dd_ifexist
 			else
-				' html5 support 
-				if g_use_html5_fields_for_input="YES" then 
-					ft_inputtype=ft_inputtype
-				else
-					ft_inputtype="text"
-				end if	
+				ft_inputtype=ft_inputtype
 				arr_Two_Value = "<input type='" & ft_inputtype & "' name='" & rs.fields(i).name & ft & "' value=''>	"
 			end if
 		else 
@@ -1549,8 +1396,8 @@ Function add_rowRS(g_Table_Caption_and_Info,editable_cols,g_DBTableDropdownsForI
 		end if
 	end if
 	prc = CInt( NVL( request.querystring("prc") ,"1") )'###VKU###
-	table= "<br><form action='" & page_name & "?op=i&a=a&p=" & page & "&prc=" & prc & "' method='post'><table class='DataTable'><caption>" & g_Table_Caption_and_Info & "</caption>" & new_row & "</table><br>"
-	table = table & "<input type='submit' value='Create Record'></form>"
+	table= "<br><form id='addForm' action='" & page_name & "?op=i&a=a&p=" & page & "&prc=" & prc & "' method='post'><table class='DataTable'><caption>" & g_Table_Caption_and_Info & "</caption>" & new_row & "</table><br>"
+	table = table & "<input type='submit' value='Create Record' form='addForm'></form>"
 	
 	rs.close
 	set rs=nothing
@@ -1577,7 +1424,7 @@ Function edit_rowRS(g_Table_Caption_and_Info,id_value,editable_cols,g_DBTableDro
 	
 	if id_value ="" or instr(id_value,",")<>0 then 
 		call debug_write("Abnormal Table ID for edition received : NULL or multiple values from query string. Vulnerable action from user.", "")
-		exit function  ' prevent multiple id edition like this iv=1&iv=2 -> not possible. 
+		exit function  ' prevent multiple id edition like this iv=1&iv=2  
 	end if		
 	
     Set rs = CreateObject("ADODB.Recordset")
@@ -1585,6 +1432,7 @@ Function edit_rowRS(g_Table_Caption_and_Info,id_value,editable_cols,g_DBTableDro
 	rs.open rs_sql, cn
 	
 	ID_=func_CheckIfBracketsQuotesNeeded(ucase(g_DBTableIdColumn))
+	prc = CInt( NVL( request.querystring("prc") ,"1") )
 	
 	do while not rs.eof
 		for i=0 to rs.fields.count-1
@@ -1606,17 +1454,12 @@ Function edit_rowRS(g_Table_Caption_and_Info,id_value,editable_cols,g_DBTableDro
 			arr_One_Value = func_ReplaceTabColNameWithText(rs.fields(i).name) 
 			
 			dd_ifexist = func_GetFilterDropdownsIfExist(g_DBTableDropdownsForInsertUpdate,rs.fields(i).name,rs.fields(i).value)
-			if func_CheckIfBracketsQuotesNeeded(ucase(rs.fields(i).name)) <> ID_ then 
+			if func_CheckIfBracketsQuotesNeeded(ucase(rs.fields(i).name)) <> ID_ then ' ignore value of ID
 				if instr(ec,"," & ucase(rs.fields(i).name) & ",")<>0 then 
 					if dd_ifexist<>"" then
 						arr_Two_Value= dd_ifexist 
 					else
-						' html5 fields type support by browsers
-						if g_use_html5_fields_for_input="YES" then 
-							ft_inputtype=ft_inputtype
-						else
-							ft_inputtype="text"
-						end if	
+						ft_inputtype=ft_inputtype
 						arr_Two_Value = "<input type='" & ft_inputtype & "' name='" & rs.fields(i).name & ft & "' value='" & html_cell & "' size='" & len(html_cell)+4 & "'>"  ' not tested on null values (len field if null)
 					end if	
 				else
@@ -1660,10 +1503,14 @@ Function edit_rowRS(g_Table_Caption_and_Info,id_value,editable_cols,g_DBTableDro
 		end if
 	end if
 
-	prc = CInt( NVL( request.querystring("prc") ,"1") )
-	table="<br><form action='" & page_name & "?op=e&a=a&iv=" & id_value & "&p=" & page & "&prc=" & prc & "' method='post'><table class='DataTable'><caption>" & g_Table_Caption_and_Info & "</caption>" & new_row & "</table><br>"
-	table = table & "<input type='submit' value='Apply Changes'></form>"
-
+	' DELETE RECORD button
+	if g_TableRowsDeleteAllowed="YES" then
+		table = "<form id='delForm'  action='" & page_name & "?op=d&a=a&iv=" & id_value & "&p=" & page & "&prc=" & prc & "' method='post'><input type='submit' value='Delete Record' form='delForm'></form>"
+	end if
+	
+	table=table & "<br><form id='editForm' action='" & page_name & "?op=e&a=a&iv=" & id_value & "&p=" & page & "&prc=" & prc & "' method='post'><table class='DataTable'><caption>" & g_Table_Caption_and_Info & "</caption>" & new_row & "</table><br>"
+	table = table & "<input type='submit' value='Apply Changes' form='editForm'></form>"
+	
 	rs.close
 	set rs=nothing
     
@@ -1928,9 +1775,10 @@ End Function
 
 Public sub write_log(in_msg)
 
+' don't uncomment this block
 ' to use logging in application and messages generation You need to 
-' 1. Create logging table in database 
-' 2. example for MS SQL server (table name you can change and correct code below in str_ variabe "insert into log")
+' 1. Create logging table in database. Below is MS SQL database sample table.
+'    example for MS SQL server (table name you can change and correct code below in str_ variabe "insert into log")
 ' CREATE TABLE dbo.log(
 '	id int IDENTITY(1,1) NOT NULL, -- autoincrement id column
 '	createdon datetime NULL,
@@ -1946,6 +1794,9 @@ Public sub write_log(in_msg)
 'ALTER TABLE dbo.log ADD  DEFAULT (getdate()) FOR createdon
 'GO 
 ' end of script 
+' 2. set g_page_datasource variable to the read database where you will save logs
+	
+	g_page_datasource = "sqlweb"
 
 	dim str_
 	str_= "insert into log (visitorip,remotehost,httphost,scriptname,querystring,log_msg) values ('#1#','#2#','#3#','#4#','#5#','#6#')"
@@ -1990,7 +1841,7 @@ Function func_ReplaceTabColNameWithText(in_column)
 	if g_use_columns_beautifier="YES" then 
 	
 		if len(in_column)=0 then
-			func_ReplaceTabColNameWithText=""
+			func_ReplaceTabColNameWithText=in_column
 			exit function
 		end if
 		
@@ -1999,16 +1850,27 @@ Function func_ReplaceTabColNameWithText(in_column)
 			exit function
 		end if
 		
+		' /----------
+		if len(g_TableColumnsHeadersSubstitution)>0 then
+			if right(g_TableColumnsHeadersSubstitution,1)=";" then 
+				g_TableColumnsHeadersSubstitution=mid(g_TableColumnsHeadersSubstitution,1,len(g_TableColumnsHeadersSubstitution)-1)
+			end if
+		end if
+		g_ColumnsSubstitutionKeyValue = split(g_TableColumnsHeadersSubstitution,";")	
+		' \----------
+		
 		'max id of substitution array always must have key and their pair value 
 		max_key_id = ubound(g_ColumnsSubstitutionKeyValue)
-		if max_key_id/2<>max_key_id\2 then 
-			call debug_write("Substitution array problem. Must always have key and value pairs. Total count:" & max_key_id,"")
+		if (max_key_id+1)/2<>(max_key_id+1)\2 then 
+			call debug_write("Substitution array problem. Must always have key and value pairs. Total count:" & max_key_id+1,"")
 			exit function
 		end if
 		
 		for i=0 to max_key_id step 2
 			key_ = g_ColumnsSubstitutionKeyValue(i)
-			if ucase(key_) = ucase(in_column) then out_ = g_ColumnsSubstitutionKeyValue(i+1): if g_use_columns_beautifier_compact="YES" then out_ = replace(out_," ","<br>")
+			if ucase(key_) = ucase(in_column) then 
+				out_ = g_ColumnsSubstitutionKeyValue(i+1): if g_use_columns_beautifier_compact="YES" then out_ = replace(out_," ","<br>")
+			end if	
 		next 	
 
 	end if
@@ -2085,7 +1947,7 @@ Function func_GenerateMenu()
 		end if ' / 2
 		
 		' if mode edit or insert or button "submit data" pressed, we disable Export To Excel on menu level
-		if Request.QueryString("op")<>"i" and Request.QueryString("op")<>"e" and Request.QueryString("a")<>"a" then 
+		if Request.QueryString("op")<>"i" and Request.QueryString("op")<>"e"  and Request.QueryString("op")<>"d" and Request.QueryString("a")<>"a" then 
 			ret_ = ret_ & "<a id='downloadLink' onclick='exportToExcel(this)'>Export to excel</a>" & vbcrlf
 		end if
 		ret_ = ret_ & "<a href='#' onclick='showNewsInfo()'>Info/Help</a>" & vbcrlf
@@ -2398,5 +2260,234 @@ Function func_GetGlobalVariablesValues()
 		
 	func_GetGlobalVariablesValues = ret_
 	
+End Function
+
+Function func_printHeadStylesScripts(in_VisualStyleCode)
+' in_VisualStyleCode is color schema for UI elements
+%>
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta name="name" content="SQL WEB framework">
+	<meta name="version" content="1.02">
+	<meta name="description" content="Single page website based only on SQL queries and asp variables">
+	<meta name="keywords" content="single page application, spa, sql, iis, asp, database frontend, front-end, web frontend">
+	<meta name="author" content="vku1">
+	<meta name="home page" content="https://github.com/vku1/sqlweb">
+<% 
+
+	' Adjusting Notepad++ to work with an ASP VBScript project. http://thewayofcoding.com/2016/11/adjusting-notepad-to-work-with-an-asp-vbscript-project/
+
+	'/----- Page Visual Style: Font for all elements and Colors ----
+	' You can use any installed in the system font.  
+		dim font_ 
+		font_ = "Courier" ' "Candara" ' '"Courier" "Verdana" "Arial Narrow" "Courier New" "Calibri" "Tahoma" 
+			
+		dim theme_color
+		dim theme_color_menu_bg
+		dim theme_color_menu_hover
+		dim theme_color_font
+		' to change visual elements colors unlock any line below by removing ' on left 	
+		select case in_VisualStyleCode
+		Case 1 
+			theme_color = "#5D6D7E": theme_color_menu_bg = "#eee"   : theme_color_menu_hover = "#aaaaaa": theme_color_font = "#778877" : theme_color_table_child="#f2f2f2" ' dark gray
+		Case 2 
+			theme_color = "#818181": theme_color_menu_bg = "#FaFaFa": theme_color_menu_hover = "#cFcFcF": theme_color_font = "#666666" : theme_color_table_child="#f2f2f2" ' light gray
+		Case 3
+			theme_color = "#5499C7": theme_color_menu_bg = "#D6EAF8": theme_color_menu_hover = "#85C1E9": theme_color_font = "#21618C" : theme_color_table_child="#EBF5FB"' blue
+		Case 4 
+			theme_color = "#52BE80": theme_color_menu_bg = "#A9DFBF": theme_color_menu_hover = "#27AE60": theme_color_font = "#196F3D" : theme_color_table_child="#E8F6F3" ' green
+		Case 5 
+			theme_color = "#935116": theme_color_menu_bg = "#FDF2E9": theme_color_menu_hover = "#FAE5D3": theme_color_font = "#784212" : theme_color_table_child="#f2f2f2" ' orange
+		Case else 
+			theme_color = "#123456": theme_color_menu_bg = "#654321": theme_color_menu_hover = "#162534": theme_color_font = "#342516" : theme_color_table_child="#456123" ' unknown
+		End Select 	
+	'\---------------------------------------	
+
+%>
+<style type="text/css">
+
+body{
+   background-image:url("body.jpg");
+   background-size:cover;
+   background-repeat:repeat;}
+
+/* Fixed sidenav, full height */
+.sidenav {
+  height: 100%;  width: 200px;  position: fixed;  z-index: 1;  top: 0;  left: 0;  background-color: <%=theme_color_menu_bg%>;  overflow-x: hidden;  padding-top: 20px; font: 100% <%=font_%>;}
+
+.sidenav img {
+width: 35%;
+padding: 6px 8px 10px 16px;}
+
+
+.sidenav-logo {
+width:90%;
+padding: 0px 0px 10px 14px;
+font-size: 16px;
+font-weight: bold;}
+
+.sidenav-GlobalObjects {
+position: relative; bottom: 0;
+width:90%;
+padding: 0px 0px 10px 14px;
+font-size: 16px;
+font-weight: bold;}
+
+/* Style the sidenav links and the dropdown button */
+.sidenav a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  color: <%=theme_color_font%>;
+  display: block;
+  border: none;
+  background: none;
+  width:100%;
+  text-align: left;
+  cursor: pointer;
+  outline: none;}
+
+.dropdown-btn {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  color: <%=theme_color_font%>;
+  display: block;
+  border: none;
+  background: none;
+  width:100%;
+  text-align: left;
+  cursor: pointer;
+  outline: none;  
+  
+  font-weight:bold;
+  font-size: 12px;
+  font: 100% <%=font_%>;}
+
+/* On mouse-over */
+.sidenav a:hover, .dropdown-btn:hover {
+  color: #212121; /*font color for menu items on hover*/
+  background-color: <%=theme_color_menu_hover%>;}
+
+/* Add an active class to the active dropdown button */
+.active {
+  background-color: #f1f1f1; 
+  color: #010101;}
+
+/* Dropdown container (hidden by default). Optional: add a lighter background color and some left padding to change the design of the dropdown content */
+.dropdown-container {
+  display: none;
+  background-color: #f1f1f1; /*BG color of dropdown items*/
+  padding-left: 12px;
+  font-size: 12px;}
+
+/* Optional: Style the caret down icon */
+.fa-caret-down {
+  float: right;
+  padding-right: 8px;
+  font-family; <%=font_%>;}
+
+/* Main content */
+.main {
+  margin-left: 200px; /* Same as the width of the sidenav */
+  padding: 0px 10px;}
+
+table.DataTable {border-collapse: collapse;}
+table.DataTable caption {background: white; color: <%=theme_color%>;border: 1px solid <%=theme_color%>; font-weight:bold;padding: 10px;font-size:14px;}
+table.DataTable th {position: sticky; top: 0; z-index: 100; background-color: <%=theme_color%>;color: white; padding: 3px;} 
+
+table.DataTable tr:nth-child(even) {background-color: <%=theme_color_table_child%>;} 
+table.DataTable tr:hover {background-color: <%=theme_color_menu_hover%>;} 
+table.DataTable td {border-bottom: 1px solid #ddd; padding: 6px; color:<%=theme_color_font%>; } 
+
+table.tablefilter {table-layout: fixed; border-collapse: collapse;border: 1px solid <%=theme_color%>;}
+table.tablefilter caption {background: <%=theme_color%>; color: ivory; font-weight:bold; padding: 6px 1px 4px 1px;font-size:14px;}
+table.tablefilter td {padding: 6px;} 
+
+body   { font-family: <%=font_%>;font-size:12px;}
+input  { font-family: <%=font_%>; color: <%=theme_color_font%>;}
+select { font-family: <%=font_%>;}
+.main a:link,  .main a:visited, .main a:not([href]) {background-color: <%=theme_color%>;color: ivory; padding: 5px 7px;text-align: center;text-decoration: none;display: inline-block;}
+.main a:hover, .main a:active {background-color: <%=theme_color_menu_hover%>;}
+
+input[type=submit], input[type=reset] 
+{
+  background-color: <%=theme_color%>;
+  border: none;
+  color: ivory;
+  padding: 5px 5px;
+  text-decoration: none;
+  margin: 4px 2px;s
+  cursor: pointer;
+  font: 400 12px <%=font_%>;}
+input[type=submit]:hover, input[type=reset]:hover {background-color: <%=theme_color_menu_hover%>;} 
+
+select {
+    display: block;
+    color: <%=theme_color_font%>;
+    line-height: 1.3;
+    width: auto;
+    margin: 0;
+    font: 400 12px <%=font_%>;
+	border: 1px solid #aaa;
+    border-radius: 2px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    --appearance: none;
+    background-color: white;
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;}
+	
+select::-ms-expand {display: none;}
+
+select:hover {
+    border-color: #888;}
+select:focus {
+    border-color: #aaa;
+    box-shadow: 0 0 1px 1px <%=theme_color_font%>;
+    box-shadow: 0 0 0 3px -moz-mac-focusring;
+    color: #222; 
+    outline: none;}
+</style>
+
+<%  ' -- timestamp generation for export menu item for filename ----
+	DIM TMS
+	TMS = DatePart("yyyy",Date) & Right("0" & DatePart("m",Date), 2) & Right("0" & DatePart("d",Date), 2) & "-" & Right("0" & Hour(Now), 2) & Right("0" & Minute(Now), 2) & Right("0" & Second(Now), 2)
+%>
+
+<script>
+
+function exportToExcel(elem) {
+  var table = document.getElementById("DataTable");
+  var html = table.outerHTML;
+  var url = 'data:application/vnd.ms-excel,' + escape(html); 
+  elem.setAttribute("href", url);
+  elem.setAttribute("download", "Export<%=TMS%>.xls"); // Choose the file name
+  return false;
+}
+
+function showNewsInfo() {
+  var x = document.getElementById("MsgInfo");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+
+function showDebugContent() {
+  var x = document.getElementById("DebugInfo");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+
+</script>
+</head>
+<body>
+<%
 End Function
 %>
