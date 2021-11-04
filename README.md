@@ -16,7 +16,40 @@ If you have never created a front-end to databases or reports for the web before
 ![Page](https://github.com/vku1/sqlweb/blob/main/sample_page.jpg)
 
 **Code**
-![Code](https://github.com/vku1/sqlweb/blob/main/sample_code.jpg)
+
+```
+case "2"
+	
+		g_Table_Caption_and_Info = "Yearly statistics by the departments"
+		g_Form_Info_Help = ""
+		
+		g_SQL =         " select a.fiscal_year, a.purch_dept,b.deptname, a.po_count, a.encum_amount, '<a href=''sqlsite.asp?fiscal_year='+a.fiscal_year+'&purch_dept='+a.purch_dept+'&p=3''>...</a>' Info from ("
+        g_SQL = g_SQL & " select [fiscal_year],[purch_dept], count([purchase_order]) po_count,sum([enc_amount]) [encum_amount] from ( "
+        g_SQL = g_SQL & " select CAST(DATEPART(yyyy, [post_date_orig]) AS varchar(4) ) [fiscal_year],[purch_dept],[purchase_order],sum([encumbered_amount]) [enc_amount]   "
+        g_SQL = g_SQL & " from [test_sqlweb_db].[dbo].[purchasing_commodity]  "
+        g_SQL = g_SQL & " group by CAST(DATEPART(yyyy, [post_date_orig]) AS varchar(4) ),[purch_dept],[purchase_order] "
+        g_SQL = g_SQL & " ) x group by [fiscal_year],[purch_dept] ) a inner join (select * from dbo.depts) b "
+        g_SQL = g_SQL & " on a.purch_dept = b.deptcode "
+        g_SQL = g_SQL & "  "
+        		
+		g_FilterDropdownsAllowed = "YES"
+		g_FilterDropdownsColumns =  "select '%' as fiscal_year , 'All years' fiscal_year  union  select distinct CAST(DATEPART(yyyy, [post_date_orig]) AS varchar(4) ) fiscal_year,CAST(DATEPART(yyyy, [post_date_orig]) AS varchar(4) ) fiscal_year from [dbo].[purchasing_commodity];" _ 
+								  & "select '%' as purch_dept , 'All depts' purch_dept  union  select distinct purch_dept,purch_dept + ' - ' + b.deptname from [dbo].[purchasing_commodity] a inner join (select * from dbo.depts) b on a.purch_dept = b.deptcode;"
+			
+		g_FilterDatalistsColumns = ""								
+		g_FiltersDefaultValues = "select '' fiscal_year,'' purch_dept"
+		
+		g_TableColumnsSortingAllowed = "YES" 
+		g_TableColumnsDefaultSorting = "fiscal_year asc"
+        
+	    g_TableRowsUpdateAllowed = "NO" : g_TableRowsInsertAllowed  = "NO" : g_TableRowsDeleteAllowed = "NO"
+		g_DBTableForInsertUpdate="dbo.purchasing_commodity"
+		g_DBTableIdColumn="id"
+		g_DBTableFieldsListForInsertUpdate=""
+		g_DBTableDropdownsForInsertUpdate = ""
+		g_DBTableDatalistsForInsertUpdate = ""
+		g_TableUpdateInsertLayoutVerticalHorizontal="V"
+  ```
 
 ## Environment and Knowledges to start?
 
