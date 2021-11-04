@@ -15,11 +15,11 @@ Dim g_clientIP
 	'end if
 ' \ -------------------
 
-' /--- Connection string CODE stored in file global.asa --------------------	
-' How it works? You open global.asa file. Find line Application("my_data_source_1") = "ConnectionStringHere"
+' /--- Connection string CODE --------------------	
+' How it works? Open global.asa file. Find line Application("my_data_source_1") = "ConnectionStringHere"
 ' and change part between quotes "ConnectionStringHere" to the proper connection string.
 ' More information you can get on https://www.connectionstrings.com/
-' You can find such connection string in global.asa for SQL server Example: 
+' Example for SQL server: 
 ' Application("my_data_source_1")="Provider=SQLNCLI11;server=localhost\SQLEXPRESS;database=YOURDATABASENAME;uid=DB_username;pwd=DB_user_password"
 
 ' value of this variable is connection string name of the datasource you use globaly for all application
@@ -30,7 +30,7 @@ dim g_page_datasource
 ' Application("mssql_1")  = "ConnectionStringHere for sql server db"
 ' Application("mysql_77")  = "ConnectionStringHere for mysql db"
 ' and then use these datasources on separate page in page block "case X" 			
-	g_page_datasource = "sqlweb"
+	g_page_datasource = "my_data_source_1"
 ' \-------------------------------
 
 ' /---- Web Portal name on top of menu in left upper corner ---
