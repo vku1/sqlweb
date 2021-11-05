@@ -122,8 +122,8 @@ Open sqlsite.asp and change variables, listed below, to proper values you want i
 - g_DateTimeFromTextToSQL
 
 #### Pages
-sqlsite.asp single page application may have unlimited pages count in it. 
 Block of pages starts on `'// --- PAGES AREA START -----` construction and ends on `'\\ --- PAGES AREA END -----`
+sqlsite.asp single page application may have unlimited pages count in it. Each page has it's own code. In sample page code above there is ```case "2"```. this mean This page code is "2".
 
 #### Page variables
 These variables contain **SQL** which is DataTable or Filter values, or **predefined values** YES/NO which Enable/Disable page functionality or blocks, or **hybrid** which has it's own format as "variablename;sql construction" or "column/s list". 
