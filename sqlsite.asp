@@ -154,20 +154,20 @@ Dim g_OperationTypeInsertUpdate
 
 ' / -------- Page Global variables -------------
 Dim g_Table_Caption_and_Info					 ' report or form Name
-Dim g_Form_Info_Help							 ' use this to show users some additional information about form, description, comments, news or columns formats or other. To show content use main menu Info/Help item.
-Dim g_SQL 										 ' sql select from database
+Dim g_Form_Info_Help						 ' use this to show users some additional information about form, description, comments, news or columns formats or other. To show content use main menu Info/Help item.
+Dim g_SQL 							 ' sql select from database
 Dim g_FilterDropdownsAllowed					 ' Filter enabled or not (YES/NO)
 Dim g_FilterDropdownsColumns					 ' Example; select '%' as VendorName,'All vendors' as Vendor from dual union select VendorName,VendorName as Vendor from Vendors'
 Dim g_FilterDatalistsColumns					 ' default type for Dropdown is <select><option> tags construction, but you can change it to datalist 
-Dim g_FiltersDefaultValues						 ' select '' as VendorName,'' as Vendor from dual // dual is https://en.wikipedia.org/wiki/DUAL_table, for sql server the same will be -> select '' as VendorName,'' as Vendor -- https://en.wikipedia.org/wiki/DUAL_table
+Dim g_FiltersDefaultValues					 ' select '' as VendorName,'' as Vendor from dual // dual is https://en.wikipedia.org/wiki/DUAL_table, for sql server the same will be -> select '' as VendorName,'' as Vendor -- https://en.wikipedia.org/wiki/DUAL_table
 Dim g_TableColumnsSortingAllowed				 ' Allow Columns Sorting by click on them (YES/NO). First click ASC, second click DESC and so on.
 Dim g_TableColumnsDefaultSorting				 ' Default sorting sql syntah may be very useful for default view in reports (example: "ColumnName1 ASC, ColumnName2 DESC")	
 Dim g_TableRowsUpdateAllowed					 ' Allow Update operation on table (YES/NO)
 Dim g_TableRowsInsertAllowed					 ' Allow Insert operation on table (YES/NO)
 Dim g_TableRowsDeleteAllowed					 ' Allow delete operation on table (YES/NO) ' Delete button is Edit window. Also activate g_TableRowsUpdateAllowed. 
 Dim g_DBTableForInsertUpdate					 ' For Insert/Update we need real database table name (it may be only one, unique table name)
-Dim g_DBTableIdColumn							 ' For Update we need real database table id column name (it may be only one, unique column)
-Dim g_DBTableFieldsListForInsertUpdate
+Dim g_DBTableIdColumn						 ' For Update we need real database table id column name (it may be only one, unique column)
+Dim g_DBTableFieldsListForInsertUpdate		 ' List of table columns separated by "," which will be created/updated.  
 Dim g_DBTableDropdownsForInsertUpdate            ' default type for Dropdown is <select><option> tags construction, but you can change it to datalist . Read func_GetFilterDropdownsIfExist info for this variable.
 Dim g_DBTableDatalistsForInsertUpdate            ' change default tag construction from <select><option> to <input list><datalist><option> which support search in it. Very good for long lists.
 Dim g_DBTableMultipleDropdownsFieldsForInsert    ' List of these values will be repeated N times while inserting rows
@@ -187,11 +187,12 @@ Dim g_GlobalVariablesValues
 
 
 ' // --- PAGES AREA START ----- 
-' one page is described by it's name. Example: CASE "1" is page with code 1. CASE "XT" is page with code "XT". Gave your pages unique names.
-' Page start on CASE and ends on next CASE or on CASE ELSE construction below
+' One Page code start on CASE and ends on next CASE or on CASE ELSE construction below. 
+' Example: CASE "1" is page with code 1. CASE "XT" is page with code "XT". Gave your pages unique names.
+
 SELECT CASE cstr(page)
 
-	CASE "1" 
+	CASE "1" ' -- this page code is "1". This info you use to create valid menu in g_MENU variable.
 		
 		g_Table_Caption_and_Info = "Yearly Statistics"
 		g_Form_Info_Help = "Cumulative statistics of purchase orders count by the year. Push ... to get detailed info about monthly statistics."	
