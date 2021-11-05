@@ -3,10 +3,14 @@
 	Sub Session_OnStart
 		Application.Lock
 		Session.Timeout = 20
+		' In this file IIS store global application variables which may be accesed by it's name from code stored in sqlsite.asp.
+		' my_data_cource_1,sqlweb,Chinook,OraCH is codes of the datasources you use. These codes will be used in g_page_datasource
+		' variable. You may add unlimited count of these variables here and gave them unique names and then create pages or reports
+		' each with it's uniue datasource.
 		Application("my_data_cource_1")= "Provider=SQLNCLI;server=localhost;database=my_db_name;uid=user_name;pwd=password"
-		Application("sqlweb")          = "Provider=SQLNCLI;server=WIN-D7SK\SQLEXPRESS;database=test_sqlweb_db;uid=sa;pwd=cas765)6-63nuUN03^@"
-		Application("Chinook")         = "Provider=SQLNCLI;server=WIN-D7SK\SQLEXPRESS;database=Chinook;uid=sa;pwd=cas765)6-63nuUN03^@"
-		Application("OraCH")		   = "Driver={Oracle in instantclient10_2};dbq=WIN-D7SK:1521/XE;Database=CHINOOK;User Id=chinook;Password=p4ssw0rd;"	
+		Application("sqlweb")          = "Provider=SQLNCLI;server=WIN-D7SK\SQLEXPRESS;database=test_sqlweb_db;uid=sqlweb_user;pwd=ca76)660^@"
+		Application("Chinook")         = "Provider=SQLNCLI;server=WIN-D7SK\SQLEXPRESS;database=Chinook;uid=chinook;pwd=cnebJKn321^"
+		Application("OraCH")           = "Driver={Oracle in instantclient10_2};dbq=WIN-D7SK:1521/XE;Database=CHINOOK;User Id=chinook;Password=p4ssw0rd;"	
 		Application.UnLock
 	End Sub
 
