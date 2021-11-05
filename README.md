@@ -71,10 +71,10 @@ case "2"
 - totals for numbers
 - columns sort
 - export to excel
-- data operations (add/insert one or multiply records, edit/update/delete one record)
-- database names/fields substitution
+- data operations (add one or multiply records, update/delete one record)
+- database names/fields substitution (beautifier)
 - debug
-- multiinsert (you select from multiple dropdowns x from first and y from second values and as result get x*y rows generated)
+- multiinsert (while filind form you select X values from first dropdown and Y from second values and as result get x*y rows generated)
 
 ## Benefits
 
