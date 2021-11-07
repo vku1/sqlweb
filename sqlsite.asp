@@ -250,7 +250,7 @@ SELECT CASE cstr(page)
 		g_DBTableDatalistsForInsertUpdate = "OccupationId"
 		g_TableUpdateInsertLayoutVerticalHorizontal="V"
 
-	CASE "SQ" ' -- this page code is "AC". This info you use to create valid menu in g_MENU variable.
+	CASE "SQ" 
 		g_page_datasource = "sqlite3"
 		g_DateFromTextToSQL = "date('#DATE#')"
 		g_DateTimeFromTextToSQL = "datetime('#DATE#')"
@@ -309,7 +309,7 @@ CASE "OA"
 		g_TableUpdateInsertLayoutVerticalHorizontal="V"
 
 
-	CASE "1" ' -- this page code is "1". This info you use to create valid menu in g_MENU variable.
+	CASE "1" 
 		
 		g_Table_Caption_and_Info = "Yearly Statistics"
 		g_Form_Info_Help = "Cumulative statistics of purchase orders count by the year. Push ... to get detailed info about monthly statistics."	
@@ -424,67 +424,6 @@ CASE "OA"
 		g_DBTableFieldsListForInsertUpdate=""
 		g_DBTableDropdownsForInsertUpdate = ""
 		g_DBTableDatalistsForInsertUpdate = ""
-		g_TableUpdateInsertLayoutVerticalHorizontal="V"
-
-	
-	CASE "11" 
-		
-		g_page_datasource = "OraCH"
-		
-		g_DateFromTextToSQL = "TO_DATE( SUBSTR('#DATE#',1,10),'YYYY-MM-DD')"
-	    g_DateTimeFromTextToSQL = "TO_DATE( REPLACE('#DATE#','T',' ') ,'YYYY-MM-DD HH24:MI')"
-		
-		g_PortalName = "Oracle Chinook Album"
-		
-		g_Table_Caption_and_Info = " Albums " 
-			
-		g_Form_Info_Help = ""	
-        g_SQL = " select albumid,a.artist_name,title album_title from album al inner join (select artistid,name artist_name from artist) a on al.artistid=a.artistid "
-        		
-		g_FilterDropdownsAllowed = "NO"
-		g_FilterDropdownsColumns = ""
-		g_FilterDatalistsColumns = ""
-		g_FiltersDefaultValues = ""
-		
-		g_TableColumnsSortingAllowed = "YES" 
-		g_TableColumnsDefaultSorting = "album_title asc"
-        
-	    g_TableRowsUpdateAllowed = "YES" : g_TableRowsInsertAllowed  = "YES" : g_TableRowsDeleteAllowed = "YES"
-		g_DBTableForInsertUpdate="album"
-		g_DBTableIdColumn="albumid"
-		g_DBTableFieldsListForInsertUpdate="title,artistid"
-		g_DBTableDropdownsForInsertUpdate = "ARTISTID;select 0 artistid,'' artist_name from dual union select artistid,name artist_name from artist order by artist_name"
-		g_DBTableDatalistsForInsertUpdate = ""
-		g_DBTableMultipleDropdownsFieldsForInsert="artistid"
-		g_TableUpdateInsertLayoutVerticalHorizontal="V"
-
-	CASE "12" 
-		
-		g_page_datasource = "OraCH"
-		g_DateFromTextToSQL = "TO_DATE( SUBSTR('#DATE#',1,10),'YYYY-MM-DD')"
-		g_DateTimeFromTextToSQL = "TO_DATE( REPLACE('#DATE#','T',' ') ,'YYYY-MM-DD HH24:MI')"
-		g_PortalName = "Oracle Album test"
-		
-		g_Table_Caption_and_Info = " Albums test " 
-			
-		g_Form_Info_Help = ""	
-        g_SQL = " select albumid,a.artist_name,title album_title, summa, created_on,modified_on from album_test al inner join (select artistid,name artist_name from artist) a on al.artistid=a.artistid "
-        		
-		g_FilterDropdownsAllowed = "NO"
-		g_FilterDropdownsColumns = ""
-		g_FilterDatalistsColumns = ""
-		g_FiltersDefaultValues = ""
-		
-		g_TableColumnsSortingAllowed = "YES" 
-		g_TableColumnsDefaultSorting = "album_title asc"
-        
-	    g_TableRowsUpdateAllowed = "YES" : g_TableRowsInsertAllowed  = "YES" : g_TableRowsDeleteAllowed = "YES"
-		g_DBTableForInsertUpdate="album_test"
-		g_DBTableIdColumn="albumid"
-		g_DBTableFieldsListForInsertUpdate="title,artistid,summa,created_on,modified_on"
-		g_DBTableDropdownsForInsertUpdate = "ARTISTID;select 0 artistid,'' artist_name from dual union select artistid,name artist_name from artist order by artist_name"
-		g_DBTableDatalistsForInsertUpdate = ""
-		g_DBTableMultipleDropdownsFieldsForInsert="artistid"
 		g_TableUpdateInsertLayoutVerticalHorizontal="V"
 		
 	case else
