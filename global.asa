@@ -9,7 +9,6 @@
 		' each with it's uniue datasource.
 		'Application("my_data_cource_1")= "Provider=SQLNCLI;server=localhost;database=my_db_name;uid=user_name;pwd=password"
 		
-		'Application("Chinook")         = "Provider=SQLNCLI;server=WIN-D7SK\SQLEXPRESS;database=Chinook;uid=chinook;pwd=cnebJKn321^"
 		Application("Excel_test")      = "Driver={Microsoft Excel Driver (*.xls)};DriverId=790;Dbq=C:\datasources\excel_example.xls;DefaultDir=C:\datasources;ReadOnly=0;"
 		Application("Access_test")     = "Driver={Microsoft Access Driver (*.mdb)};Dbq=C:\datasources\access_example.mdb;"
 		Application("mssql")           = "Provider=SQLNCLI11;server=User-PC\SQLEXPRESS;database=test_sqlweb_db;uid=sa;pwd=ca76)660^@"
@@ -21,7 +20,6 @@
 	Sub Session_OnEnd
 		Application.Lock
 		'Application("my_data_cource_1")=""
-		
 		Application("Excel_test")	=""
 		Application("Access_test")	=""
 		Application("mssql")		=""
