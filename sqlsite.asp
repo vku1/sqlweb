@@ -30,12 +30,12 @@ dim g_page_datasource
 ' Application("mssql_1")  = "ConnectionStringHere for sql server db"
 ' Application("mysql_77")  = "ConnectionStringHere for mysql db"
 ' and then use these datasources on separate page in page block "case X" 			
-	g_page_datasource = "my_data_source_1"
+	g_page_datasource = "mssql"
 ' \-------------------------------
 
 ' /---- Web Portal name on top of menu in left upper corner ---
 Dim g_PortalName
-	g_PortalName = "San Francisco Purchasing Commodity Data"
+	g_PortalName = "SQLWEB"
 ' \------------------------
 
 ' / --- Site menu generation --------------
@@ -44,10 +44,11 @@ dim g_MENU ' global variable for menu.
 ' (Page_Name_without_submenu_items):Page_code;
 ' [Page_Name_with_submenu_items]:{First_submenu_item_name}:page_code_of_first_submenu:{Second_submenu_item_name}:page_code_of_second_submenu;
 	g_MENU = ""
-	g_MENU = g_MENU & "(Home):1;"
-	g_MENU = g_MENU & "[Statistics]:1:{Years}:2:{Departments}:3:{Monthly by the department}:4:{Purchase orders};"
-	g_MENU = g_MENU & "[Chinook]:5:{Artists}:6:{Albums};"
-	g_MENU = g_MENU & "[Oracle]:11:{Album}:12:{Album test};"
+	g_MENU = g_MENU & "(Excel file):TT;"
+	g_MENU = g_MENU & "(Access db):AC;"
+	g_MENU = g_MENU & "(SQLite db):SQ;"
+	g_MENU = g_MENU & "[MSSQL Statistics]:1:{Years}:2:{Departments}:3:{Monthly by the department}:4:{Purchase orders};"
+	g_MENU = g_MENU & "(Oracle db):OA;"
 ' \ ------------------
 
 ' /-- Physical filename of this script for links generation -------
@@ -63,7 +64,7 @@ dim page
 											
 ' / --- Default page which will be displayed if ?p=XX is ommited in url, or if invalid ?p= is set	 
 Dim g_DefaultPageCode
-	g_DefaultPageCode = "1"
+	g_DefaultPageCode = "TT"
 ' \ ------------------
 
 ' /---- User Interface style code. Predefined 1,2,3,4,5 codes ---
@@ -74,7 +75,7 @@ Dim g_UIStyleCode
 ' /--- Maximum number of records on page (pagination) --------------------	
 ' Number of records in html table for viewing (pagination block added automaticaly).
 dim g_page_records_count 
-	g_page_records_count = 20 
+	g_page_records_count = 16 
 ' \-------------------------------
 
 ' /---- Brackets for columns with spaces ----------------
@@ -86,8 +87,8 @@ dim g_page_records_count
 ' For MySql `my column name`, both brackets ` are the same
 dim g_columns_start_bracket
 dim g_columns_end_bracket
-	g_columns_start_bracket="""" ' "[" for SQL Server,SQLite , """" for Oracle,PostgreSQL,SQL Server,SQLite , "`" for MySQL,MariaDB
-	g_columns_end_bracket=""""   ' "]" for SQL Server,SQLite , """" for Oracle,PostgreSQL,SQL Server,SQLite , "`" for MySQL,MariaDB
+	g_columns_start_bracket="[" ' "[" for SQL Server,SQLite , """" for Oracle,PostgreSQL,SQL Server,SQLite , "`" for MySQL,MariaDB
+	g_columns_end_bracket="]"   ' "]" for SQL Server,SQLite , """" for Oracle,PostgreSQL,SQL Server,SQLite , "`" for MySQL,MariaDB
 ' \--------------------
 
 ' /---- When You get or set date field in browser it's format in HTML5  is always YYYY-MM-DDTHH:MI and this string value replaces #DATE# part of function below
@@ -99,14 +100,16 @@ Dim g_DateFromTextToSQL   ' added for HTML5 universal date string value
 	'g_DateFromTextToSQL = "date('#DATE#')" ' For SQLITE
 	'g_DateFromTextToSQL = "to_date(REPLACE('#DATE#','T',' '),'YYYY-MM-DD') ' For PostgreSQL
 	'g_DateFromTextToSQL = "str_to_date('#DATE#','%Y-%m-%d')" ' for MariaDB
+	'g_DateFromTextToSQL = "CDate( mid('#DATE#',9,2) & '/' & mid('#DATE#',6,2) & '/' & mid('#DATE#',1,4)  )" ' MS Access
 	
 ' Incorrect default browser datetime-local value for SQL Server example is -> CAST('2021-06-02T08:51' as DateTime), Correct ->  CAST('2021-06-02T08:51:00' as DateTime) 	
 Dim g_DateTimeFromTextToSQL   ' added for HTML5 universal date string value
-	g_DateTimeFromTextToSQL = "CAST('#DATE#:00' as DateTime)" ' 'For SQL Server
+	g_DateTimeFromTextToSQL = "CAST('#DATE#:00' as DateTime)" ' For SQL Server
 	'g_DateTimeFromTextToSQL = "TO_DATE( REPLACE('#DATE#','T',' ') ,'YYYY-MM-DD HH24:MI')" ' For ORACLE
 	'g_DateTimeFromTextToSQL = "datetime('#DATE#')" ' For SQLITE
 	'g_DateTimeFromTextToSQL = "to_timestamp(REPLACE('#DATE#','T',' '),'YYYY-MM-DD HH24:MI')" ' For PostgreSQL
 	'g_DateTimeFromTextToSQL = "str_to_date('#DATE#','%Y-%m-%dT%H:%i')" ' for MariaDB
+	'g_DateTimeFromTextToSQL = "CDate( mid('#DATE#',9,2) & '/' & mid('#DATE#',6,2) & '/' & mid('#DATE#',1,4)  & ' ' & mid('#DATE#',12,5) & ':00')"  ' MS Access
 	
 ' /---- Columns Beautifier ----------------
 ' Table columns names may have strange names in database, not friendly for end users.
@@ -135,7 +138,7 @@ Dim g_ColumnsSubstitutionKeyValue
 ' When debug enabled You can access internal application logging info from menu "Debug log". 
 ' DO NOT activate in production! 
 dim g_debug_flag 
-	g_debug_flag="NO" ' YES/NO
+	g_debug_flag="YES" ' YES/NO
 	' You can uncomment line below to prevent access to debug for users except the ip address of your pc. in example your ip address is 192.168.1.1
 	'if g_clientIP="192.168.1.1" then g_debug_flag="YES" else g_debug_flag="NO"
 dim g_debug_log ' debug log messages in this variable
@@ -191,6 +194,120 @@ Dim g_GlobalVariablesValues
 ' Example: CASE "1" is page with code 1. CASE "XT" is page with code "XT". Gave your pages unique names.
 
 SELECT CASE cstr(page)
+
+	CASE "TT" ' -- this page code is "TT". This info you use to create valid menu in g_MENU variable. 
+		g_page_datasource = "Excel_test"
+		g_Table_Caption_and_Info = "Data based on Excel file"
+		g_Form_Info_Help = "Excel datasource test"	
+		        
+        g_SQL = "select m2.[num],m2.[FirstName],m2.[LastName],m2.[Occupation],c.[Country],m2.[Age],m2.[Date1],m2.[Id] from " 
+		g_SQL = g_SQL & "(select a.[num],a.[FirstName],a.[LastName],b.[Occupation],a.[Age],a.[Date1],a.[Id],a.countryid from (select * from [Sheet1$]) as a " 
+		g_SQL = g_SQL & " left join (select * from [Sheet2$]) as b on a.[Occupationid]=b.[Occupationid] ) as m2"
+		g_SQL = g_SQL & " left join (select * from [Sheet3$]) as c on m2.[countryid]=c.[countryid] "
+        		
+		g_FilterDropdownsAllowed = "YES"
+		g_FilterDropdownsColumns = "select '%' as country,'All' as CountryName         from [Sheet3$] where countryid=1     union select Country,Country as CountryName            from (select Country from [Sheet3$] group by country order by country) as x;" _
+		                         & "select '%' as Occupation, 'All' as OccupationName  from [Sheet2$] where Occupationid=1  union select Occupation, Occupation as OccupationName  from (select Occupation from [Sheet2$] group by Occupation order by Occupation) as x"
+		g_FilterDatalistsColumns = ""					   
+		g_FiltersDefaultValues = "select '%' as country,'%' as Occupation from [Sheet1$] where id=1"
+		
+		g_TableColumnsSortingAllowed = "YES" 
+		g_TableColumnsDefaultSorting = "id asc"
+        
+	    g_TableRowsUpdateAllowed = "YES" : g_TableRowsInsertAllowed  = "NO" : g_TableRowsDeleteAllowed = "NO"
+		g_DBTableForInsertUpdate="[Sheet1$]"
+		g_DBTableIdColumn="id"
+		g_DBTableFieldsListForInsertUpdate="[num],[FirstName],[LastName],[OccupationId],[CountryId],[Age],[Date1]"
+		g_DBTableDropdownsForInsertUpdate = "OccupationId;select OccupationId,Occupation from [Sheet2$] ;CountryId;select countryid,Country from [Sheet3$]"
+		g_DBTableDatalistsForInsertUpdate = ""
+		g_TableUpdateInsertLayoutVerticalHorizontal="V"
+
+	CASE "AC" ' -- this page code is "AC". This info you use to create valid menu in g_MENU variable.
+		g_page_datasource = "Access_test"
+		g_DateFromTextToSQL = "CDate( mid('#DATE#',9,2) & '/' & mid('#DATE#',6,2) & '/' & mid('#DATE#',1,4)  )" 
+		g_DateTimeFromTextToSQL = "CDate( mid('#DATE#',9,2) & '/' & mid('#DATE#',6,2) & '/' & mid('#DATE#',1,4)  & ' ' & mid('#DATE#',12,5) & ':00')" 
+		
+		g_Table_Caption_and_Info = "Second page"
+		g_Form_Info_Help = "Access datasource test"	
+		        
+        g_SQL = "SELECT Table1.ID, Table1.FirstName, Table1.LastName, Table2.Occupation, Table3.Country, Table1.Age, Table1.Date1 "
+        g_SQL = g_SQL & " FROM Table3 RIGHT JOIN (Table2 RIGHT JOIN Table1 ON Table2.OccupationId = Table1.OccupationId) ON Table3.CountryId = Table1.CountryId "
+
+		g_FilterDropdownsAllowed = "YES"
+		g_FilterDropdownsColumns = "select '%' as country,'All' as CountryName from [Table3] where countryid=1 union select Country,Country as CountryName from (select Country from [Table3] group by country) as x;" _
+		                         & "select '%' as Occupation, 'All' as OccupationName from [Table2] where Occupationid=1 union select Occupation, Occupation as OccupationName  from (select Occupation from [Table2] group by Occupation order by Occupation) as x"
+		g_FilterDatalistsColumns = ""					   
+		g_FiltersDefaultValues = "select '%' as country,'%' as Occupation " ' this is like select * from dual
+		
+		g_TableColumnsSortingAllowed = "YES" 
+		g_TableColumnsDefaultSorting = "id asc"
+        
+	    g_TableRowsUpdateAllowed = "YES" : g_TableRowsInsertAllowed  = "YES" : g_TableRowsDeleteAllowed = "YES"
+		g_DBTableForInsertUpdate="[Table1]"
+		g_DBTableIdColumn="id"
+		g_DBTableFieldsListForInsertUpdate="FirstName,LastName,OccupationId,CountryId,Age,Date1"
+		g_DBTableDropdownsForInsertUpdate = "OccupationId;select OccupationId,Occupation from Table2;CountryId;select countryid,Country from Table3"
+		g_DBTableDatalistsForInsertUpdate = "OccupationId"
+		g_TableUpdateInsertLayoutVerticalHorizontal="V"
+
+	CASE "SQ" ' -- this page code is "AC". This info you use to create valid menu in g_MENU variable.
+		g_page_datasource = "sqlite3"
+		g_DateFromTextToSQL = "date('#DATE#')"
+		g_DateTimeFromTextToSQL = "datetime('#DATE#')"
+		
+		g_Table_Caption_and_Info = "Third page"
+		g_Form_Info_Help = "SQLite database test"	
+		        
+        g_SQL = "SELECT Table1.ID, Table1.FirstName, Table1.LastName, Table2.Occupation, Table3.Country, Table1.Age, Table1.Date1, '<a href=''sqlsite.asp?Occupation=' || Table2.Occupation || '&p=SQ''>' || Table2.Occupation || '</a>' as Link "
+        g_SQL = g_SQL & " FROM Table1 inner join Table2 on Table1.OccupationId = Table2.OccupationId inner join Table3 ON Table1.CountryId = Table3.CountryId "
+
+		g_FilterDropdownsAllowed = "YES"
+		g_FilterDropdownsColumns = "select '%' as country,'All' as CountryName from [Table3] where countryid=1 union select Country,Country as CountryName from (select Country from [Table3] group by country) as x;" _
+		                         & "select '%' as Occupation, 'All' as OccupationName from [Table2] where Occupationid=1 union select Occupation, Occupation as OccupationName  from (select Occupation from [Table2] group by Occupation order by Occupation) as x"
+		g_FilterDatalistsColumns = ""					   
+		g_FiltersDefaultValues = "select '%' as country,'%' as Occupation " 
+		
+		g_TableColumnsSortingAllowed = "YES" 
+		g_TableColumnsDefaultSorting = "id asc"
+        
+	    g_TableRowsUpdateAllowed = "YES" : g_TableRowsInsertAllowed  = "YES" : g_TableRowsDeleteAllowed = "YES"
+		g_DBTableForInsertUpdate="Table1"
+		g_DBTableIdColumn="id"
+		g_DBTableFieldsListForInsertUpdate="num,FirstName,LastName,OccupationId,CountryId,Age,Date1"
+		g_DBTableDropdownsForInsertUpdate = "OccupationId;select OccupationId,Occupation from Table2;CountryId;select countryid,Country from Table3"
+		g_DBTableDatalistsForInsertUpdate = "OccupationId"
+		g_TableUpdateInsertLayoutVerticalHorizontal="V"
+
+
+CASE "OA" 
+
+		g_page_datasource = "OraXE"
+		g_DateFromTextToSQL = "TO_DATE( SUBSTR('#DATE#',1,10),'YYYY-MM-DD')"
+		g_DateTimeFromTextToSQL = "TO_DATE( REPLACE('#DATE#','T',' ') ,'YYYY-MM-DD HH24:MI')"
+		
+		g_Table_Caption_and_Info = "Third page"
+		g_Form_Info_Help = "Oracle database test"	
+		        
+        g_SQL = "SELECT Table1.ID,Table1.num, Table1.FirstName, Table1.LastName, Table2.Occupation, Table3.Country, Table1.Age, Table1.Date1,Table1.Date2, '<a href=''sqlsite.asp?Occupation=' || Table2.Occupation || '&p=OA''>' || Table2.Occupation || '</a>' as Link "
+        g_SQL = g_SQL & " FROM Table1 inner join Table2 on Table1.OccupationId = Table2.OccupationId inner join Table3 ON Table1.CountryId = Table3.CountryId "
+
+		g_FilterDropdownsAllowed = "YES"
+		g_FilterDropdownsColumns = "select '%' as country,'All' as CountryName from dual union select Country,Country as CountryName from (select Country from Table3 group by country);" _
+		                         & "select '%' as Occupation, 'All' as OccupationName from dual union select Occupation, Occupation as OccupationName  from (select Occupation from Table2 group by Occupation order by Occupation)"
+		g_FilterDatalistsColumns = ""					   
+		g_FiltersDefaultValues = "select '%' as country,'%' as Occupation from dual" 
+		
+		g_TableColumnsSortingAllowed = "YES" 
+		g_TableColumnsDefaultSorting = "id asc"
+        
+	    g_TableRowsUpdateAllowed = "YES" : g_TableRowsInsertAllowed  = "YES" : g_TableRowsDeleteAllowed = "YES"
+		g_DBTableForInsertUpdate="Table1"
+		g_DBTableIdColumn="id"
+		g_DBTableFieldsListForInsertUpdate="num,FirstName,LastName,OccupationId,CountryId,Age,Date1,Date2"
+		g_DBTableDropdownsForInsertUpdate = "OccupationId;select OccupationId,Occupation from Table2;CountryId;select countryid,Country from Table3"
+		g_DBTableDatalistsForInsertUpdate = "OccupationId"
+		g_TableUpdateInsertLayoutVerticalHorizontal="V"
+
 
 	CASE "1" ' -- this page code is "1". This info you use to create valid menu in g_MENU variable.
 		
@@ -309,57 +426,6 @@ SELECT CASE cstr(page)
 		g_DBTableDatalistsForInsertUpdate = ""
 		g_TableUpdateInsertLayoutVerticalHorizontal="V"
 
-	CASE "5" 
-		
-		g_page_datasource = "Chinook"
-		g_PortalName = "Chinook"
-		
-		g_Table_Caption_and_Info = "Artist"
-		g_Form_Info_Help = ""	
-        g_SQL = " select artistid,name artist_name from artist "
-        		
-		g_FilterDropdownsAllowed = "NO"
-		g_FilterDropdownsColumns = ""
-		g_FilterDatalistsColumns = ""
-		g_FiltersDefaultValues = ""
-		
-		g_TableColumnsSortingAllowed = "YES" 
-		g_TableColumnsDefaultSorting = "artist_name asc"
-        
-	    g_TableRowsUpdateAllowed = "YES" : g_TableRowsInsertAllowed  = "YES" : g_TableRowsDeleteAllowed = "YES"
-		g_DBTableForInsertUpdate="artist"
-		g_DBTableIdColumn="artistid"
-		g_DBTableFieldsListForInsertUpdate="name"
-		g_DBTableDropdownsForInsertUpdate = ""
-		g_DBTableDatalistsForInsertUpdate = ""
-		g_TableUpdateInsertLayoutVerticalHorizontal="V"
-
-	CASE "6" 
-		
-		g_page_datasource = "Chinook"
-		g_PortalName = "Chinook"
-		
-		g_Table_Caption_and_Info = " Albums " 
-			
-		g_Form_Info_Help = ""	
-        g_SQL = " select albumid,a.artist_name,title album_title from album al inner join (select artistid,name artist_name from artist) a on al.artistid=a.artistid "
-        		
-		g_FilterDropdownsAllowed = "NO"
-		g_FilterDropdownsColumns = ""
-		g_FilterDatalistsColumns = ""
-		g_FiltersDefaultValues = ""
-		
-		g_TableColumnsSortingAllowed = "YES" 
-		g_TableColumnsDefaultSorting = "album_title asc"
-        
-	    g_TableRowsUpdateAllowed = "YES" : g_TableRowsInsertAllowed  = "YES" : g_TableRowsDeleteAllowed = "YES"
-		g_DBTableForInsertUpdate="album"
-		g_DBTableIdColumn="albumid"
-		g_DBTableFieldsListForInsertUpdate="title,artistid"
-		g_DBTableDropdownsForInsertUpdate = "artistid;select '' artistid,'' artist_name union select artistid,name artist_name from artist order by artist_name"
-		g_DBTableDatalistsForInsertUpdate = ""
-		g_DBTableMultipleDropdownsFieldsForInsert="artistid"
-		g_TableUpdateInsertLayoutVerticalHorizontal="V"
 	
 	CASE "11" 
 		
@@ -615,7 +681,7 @@ Function func_CheckIfBracketsQuotesNeeded(in_field_for_sql)
 	tmp_in_field_for_sql = trim(in_field_for_sql)
 	if len(tmp_in_field_for_sql)>0 then
 		
-		if instr(tmp_in_field_for_sql," ")<>0 then
+		'if instr(tmp_in_field_for_sql," ")<>0 then
 		
 			if left(tmp_in_field_for_sql,1)<>g_columns_start_bracket then
 				tmp_in_field_for_sql = g_columns_start_bracket & tmp_in_field_for_sql 
@@ -625,7 +691,7 @@ Function func_CheckIfBracketsQuotesNeeded(in_field_for_sql)
 				tmp_in_field_for_sql = tmp_in_field_for_sql & g_columns_end_bracket
 			end if
 
-		end if
+		'end if
 
 	end if
 	call debug_write ("func_CheckIfBracketsQuotesNeeded: in_value=" & in_field_for_sql & " out_value=" & tmp_in_field_for_sql,"")
@@ -694,6 +760,8 @@ Function func_CreateFilterItemHTML(in_SQL)
 	' second column contain visual good looking values for user-defined
     ' first column name will be used for filtering and applying to incoming select columns
 	' but if there is no select statement we use one word field as search field 
+
+on error resume next
 	
 	call debug_write ("func_CreateFilterItemHTML : in SQL =  " & in_SQL,"")
 	'response.write in_sql
@@ -706,7 +774,12 @@ Function func_CreateFilterItemHTML(in_SQL)
 				cn = Application(g_page_datasource)
 			rs.open in_SQL, cn
 				
-				'#### GlobalVariablesFilter######
+			if err.number<>0 then 
+				call debug_write ("Error occured running query : " & ssql & "<br>" & err.number & " " & err.description,"")
+				exit function
+			end if
+			
+			'#### GlobalVariablesFilter######
 				dim filter_
 				filter_ = func_GetGlobalFilter(rs)
 				if filter_<>"" then rs.filter = filter_
@@ -1019,7 +1092,7 @@ on error resume next
 	if g_FilterDropdownsAllowed="YES" then
 		where_sql_ = func_AddFilterValuesToSQL(g_FiltersDefaultValues)
 		if where_sql_ <> "" then
-			sSQL="select * from (" & sSQL & ") x " & where_sql_ & " "
+			sSQL="select * from (" & sSQL & ") as xyz " & where_sql_ & " "
 		end if
 	end if
 	
@@ -1054,7 +1127,7 @@ on error resume next
 	rs.open sSQL, cn , 0, 1, 1 'adOpenForwardOnly, adLockReadOnly, adCmdText ' https://www.w3schools.com/asp/met_rs_open.asp
 	
 	if err.number<>0 then 
-		call debug_write ("get_htmlRS(). Something is wrong in query : " & ssql & "<br>" & err.number & " " & err.description,"")
+		call debug_write ("get_htmlRS(). Something is wrong in query : " & ssql & "<br>datasource=" & g_page_datasource & "<br>" & err.number & " " & err.description,"")
 		exit function
 	end if
 	
@@ -1333,6 +1406,8 @@ End Function
 
 Function add_rowRS(g_Table_Caption_and_Info,editable_cols,g_DBTableDropdownsForInsertUpdate)
 
+	on error resume next
+	
 	Dim rs, rc_null,cn
 	dim res_, new_row
 	dim table
@@ -1349,6 +1424,11 @@ Function add_rowRS(g_Table_Caption_and_Info,editable_cols,g_DBTableDropdownsForI
 	cn=Application(g_page_datasource)
 	rs.open rs_sql, cn
     
+	if err.number<>0 then
+		call debug_write("add_rowRS: Error in query " & rs_sql & "<br>" & err.number & " " & err.description,"")
+		exit function
+	end if
+	
 	ID_= func_CheckIfBracketsQuotesNeeded(ucase(g_DBTableIdColumn))
 	
 	for i=0 to rs.fields.count-1
@@ -1409,6 +1489,8 @@ End Function
 
 Function edit_rowRS(g_Table_Caption_and_Info,id_value,editable_cols,g_DBTableDropdownsForInsertUpdate)
 
+	on error resume next
+
 	Dim rs, cn
 	dim new_row
 	dim table
@@ -1431,6 +1513,11 @@ Function edit_rowRS(g_Table_Caption_and_Info,id_value,editable_cols,g_DBTableDro
     Set rs = CreateObject("ADODB.Recordset")
 	cn=Application(g_page_datasource)
 	rs.open rs_sql, cn
+	
+	if err.number<>0 then
+		call debug_write("edit_rowRS: Error in query " & rs_sql & "<br>" & err.number & " " & err.description,"")
+		exit function
+	end if
 	
 	ID_=func_CheckIfBracketsQuotesNeeded(ucase(g_DBTableIdColumn))
 	prc = CInt( NVL( request.querystring("prc") ,"1") )
@@ -1676,8 +1763,7 @@ Function rs_field_type(in_value)
 		case 205 ret_="1"'A long binary value. adLongVarBinary
 		case 0x2000 ret_="1"'A flag value combined with another data type constant. Indicates an array of that other data type. AdArray
 	end select
-	'response.write ret_ & " " & in_value & " " & in_name & "<br>"
-	'qqqq = rs_field_db_type(in_value,in_name)
+	'call debug_write ("rs_field_type: " & ret_ & " " & in_value & "<br>","")
 	rs_field_type=ret_
 End Function
 
@@ -1726,7 +1812,7 @@ Function rs_field_db_type(in_value,in_name)
 		case 205 ret_="text"'A long binary value. adLongVarBinary
 		case 0x2000 ret_="text"'A flag value combined with another data type constant. Indicates an array of that other data type. AdArray
 	end select
-
+    'call debug_write ("rs_field_db_type: " & ret_ & " " & in_value & " " & in_name & "<br>","")
 	rs_field_db_type=ret_
 
 End Function
@@ -2281,7 +2367,7 @@ Function func_printHeadStylesScripts(in_VisualStyleCode)
 	'/----- Page Visual Style: Font for all elements and Colors ----
 	' You can use any installed in the system font.  
 		dim font_ 
-		font_ = "Courier" ' "Candara" ' '"Courier" "Verdana" "Arial Narrow" "Courier New" "Calibri" "Tahoma" 
+		font_ =  "Courier New" '"Courier" "Verdana" "Arial Narrow" "Courier New" "Calibri" "Tahoma" "Candara"
 			
 		dim theme_color
 		dim theme_color_menu_bg

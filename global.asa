@@ -4,22 +4,29 @@
 		Application.Lock
 		Session.Timeout = 20
 		' In this file IIS store global application variables which may be accesed by it's name from code stored in sqlsite.asp.
-		' my_data_cource_1,sqlweb,Chinook,OraCH is codes of the datasources you use. These codes will be used in g_page_datasource
+		' my_data_cource_1,mssql,Chinook,OraCH is codes of the datasources you use. These codes will be used in g_page_datasource
 		' variable. You may add unlimited count of these variables here and gave them unique names and then create pages or reports
 		' each with it's uniue datasource.
-		Application("my_data_cource_1")= "Provider=SQLNCLI;server=localhost;database=my_db_name;uid=user_name;pwd=password"
-		Application("sqlweb")          = "Provider=SQLNCLI;server=WIN-D7SK\SQLEXPRESS;database=test_sqlweb_db;uid=sqlweb_user;pwd=ca76)660^@"
-		Application("Chinook")         = "Provider=SQLNCLI;server=WIN-D7SK\SQLEXPRESS;database=Chinook;uid=chinook;pwd=cnebJKn321^"
-		Application("OraCH")           = "Driver={Oracle in instantclient10_2};dbq=WIN-D7SK:1521/XE;Database=CHINOOK;User Id=chinook;Password=p4ssw0rd;"	
+		'Application("my_data_cource_1")= "Provider=SQLNCLI;server=localhost;database=my_db_name;uid=user_name;pwd=password"
+		
+		'Application("Chinook")         = "Provider=SQLNCLI;server=WIN-D7SK\SQLEXPRESS;database=Chinook;uid=chinook;pwd=cnebJKn321^"
+		Application("Excel_test")      = "Driver={Microsoft Excel Driver (*.xls)};DriverId=790;Dbq=C:\datasources\excel_example.xls;DefaultDir=C:\datasources;ReadOnly=0;"
+		Application("Access_test")     = "Driver={Microsoft Access Driver (*.mdb)};Dbq=C:\datasources\access_example.mdb;"
+		Application("mssql")           = "Provider=SQLNCLI11;server=User-PC\SQLEXPRESS;database=test_sqlweb_db;uid=sa;pwd=ca76)660^@"
+		Application("sqlite3")		   = "DRIVER=SQLite3 ODBC Driver;Database=C:\datasources\SQLite\sqlite3_test.db;LongNames=0;Timeout=1000;NoTXN=0;SyncPragma=NORMAL;StepAPI=0;"	
+		Application("OraXE")		   = "Driver={Oracle in instantclient10_2};dbq=WIN-D7SK:1521/XE;Database=CHINOOK;User Id=chinook;Password=p4ssw0rd;"
 		Application.UnLock
 	End Sub
 
 	Sub Session_OnEnd
 		Application.Lock
-		Application("my_data_cource_1")=""
-		Application("sqlweb")=""
-		Application("Chinook")=""
-		Application("OraCH")=""
+		'Application("my_data_cource_1")=""
+		
+		Application("Excel_test")	=""
+		Application("Access_test")	=""
+		Application("mssql")		=""
+		Application("sqlite3")		=""
+		Application("OraXE")		=""
 		Application.UnLock
 	End Sub
 
