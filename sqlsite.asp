@@ -278,14 +278,12 @@ SELECT CASE cstr(page)
 		g_DBTableDatalistsForInsertUpdate = "OccupationId"
 		g_TableUpdateInsertLayoutVerticalHorizontal="V"
 
-
-CASE "OA" 
-
+	CASE "OA" 
 		g_page_datasource = "OraXE"
 		g_DateFromTextToSQL = "TO_DATE( SUBSTR('#DATE#',1,10),'YYYY-MM-DD')"
 		g_DateTimeFromTextToSQL = "TO_DATE( REPLACE('#DATE#','T',' ') ,'YYYY-MM-DD HH24:MI')"
 		
-		g_Table_Caption_and_Info = "Third page"
+		g_Table_Caption_and_Info = "Fourth page"
 		g_Form_Info_Help = "Oracle database test"	
 		        
         g_SQL = "SELECT Table1.ID,Table1.num, Table1.FirstName, Table1.LastName, Table2.Occupation, Table3.Country, Table1.Age, Table1.Date1,Table1.Date2, '<a href=''sqlsite.asp?Occupation=' || Table2.Occupation || '&p=OA''>' || Table2.Occupation || '</a>' as Link "
@@ -307,7 +305,6 @@ CASE "OA"
 		g_DBTableDropdownsForInsertUpdate = "OccupationId;select OccupationId,Occupation from Table2;CountryId;select countryid,Country from Table3"
 		g_DBTableDatalistsForInsertUpdate = "OccupationId"
 		g_TableUpdateInsertLayoutVerticalHorizontal="V"
-
 
 	CASE "1" 
 		
