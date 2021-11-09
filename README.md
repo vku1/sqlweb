@@ -13,6 +13,7 @@ If you have never created a front-end to databases or reports for the web before
 ## Sample Page and Code
 
 **Page**
+
 ![Page](https://github.com/vku1/sqlweb/blob/main/sample_page.jpg)
 
 **Code**
