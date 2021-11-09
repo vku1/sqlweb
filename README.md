@@ -100,6 +100,7 @@ Open IIS, find default application pool and set parameter "using 32 bit applicat
 
 #### sqlweb files
 Copy [sqlsite.asp](https://github.com/vku1/sqlweb/blob/main/sqlsite.asp) and [global.asa](https://github.com/vku1/sqlweb/blob/main/global.asa) to iis directory c:\inetpub\wwwroot\. This is default IIS directory, but you can setup other folders.
+Current content of application is configured to use one of the available preconfigured databases [Excel](https://github.com/vku1/sqlweb/blob/main/datasources/excel_example.xls),[Access](https://github.com/vku1/sqlweb/blob/main/datasources/access_example.mdb) or create scripts [SQLite](https://github.com/vku1/sqlweb/blob/main/datasources/sqlite_create_tables_insert_data.sql),[Oracle](https://github.com/vku1/sqlweb/blob/main/datasources/oracle_create_tables_triggers_sequences_insert_data.sql) or database backup [MSSQL](https://github.com/vku1/sqlweb/blob/main/datasources/mssql_full_db_backup.bak) datasource. You can choose one and set up it,  then run application.
 
 #### ODBC
 Install 32 bit odbc driver for Your database. 
