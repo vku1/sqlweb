@@ -494,7 +494,15 @@ Sub debug_write (in_msg,in_termination_flag)
 			<div id="DebugInfo" style="display:none">
 				<p style="margin-left: 200px; border:2px; border-style:solid; border-color:red; padding: 10px 10px 10px 10px;">
 					Debug Info<br>		
-					<%=g_debug_log%> 
+					<%
+					g_debug_log=replace(g_debug_log,"&","&amp;")
+					g_debug_log=replace(g_debug_log,chr(34),"&quot;")
+					g_debug_log=replace(g_debug_log,"'","&apos;")
+					g_debug_log=replace(g_debug_log,"<","&lt;")
+					g_debug_log=replace(g_debug_log,">","&qt;")
+					g_debug_log=replace(g_debug_log,vbcrlf,"<br>")
+					%>
+					<%=g_debug_log%>
 				</p>
 			</div>
 			<%
