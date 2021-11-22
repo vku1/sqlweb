@@ -52,6 +52,10 @@ case "2"
 		g_TableUpdateInsertLayoutVerticalHorizontal="V"
   ```
 
+## Video Tutorial: Simple web page from Excel file
+
+[![SQLWEB Framework](https://img.youtube.com/vi/-nSZy3eDXd0/0.jpg)](https://www.youtube.com/watch?v=-nSZy3eDXd0 "SQLWEB Framework")
+
 ## Environment and knowledges to start
 
 - You know what is the database, may write SQL queries and understand tables relations and keys
