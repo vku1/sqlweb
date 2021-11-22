@@ -488,7 +488,7 @@ END SELECT
 
 Sub debug_write (in_msg,in_termination_flag)
 	if g_debug_flag="YES" then 
-		g_debug_log=g_debug_log & in_msg & "<br>"
+		g_debug_log=g_debug_log & in_msg & vbcrlf
 		if in_termination_flag="PRINT" then
 			%>
 			<div id="DebugInfo" style="display:none">
@@ -499,7 +499,7 @@ Sub debug_write (in_msg,in_termination_flag)
 					g_debug_log=replace(g_debug_log,chr(34),"&quot;")
 					g_debug_log=replace(g_debug_log,"'","&apos;")
 					g_debug_log=replace(g_debug_log,"<","&lt;")
-					g_debug_log=replace(g_debug_log,">","&qt;")
+					g_debug_log=replace(g_debug_log,">","&gt;")
 					g_debug_log=replace(g_debug_log,vbcrlf,"<br>")
 					%>
 					<%=g_debug_log%>
