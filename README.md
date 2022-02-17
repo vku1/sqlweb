@@ -1,7 +1,7 @@
 # sqlweb
 
 ![License](https://img.shields.io/badge/license-Apache%202.0-green)
-![Version](https://img.shields.io/badge/version-1.03-yellow)
+![Version](https://img.shields.io/badge/version-1.04-yellow)
 ![Language](https://img.shields.io/badge/Language-ASP%20Classic-blue)
 ![IIS](https://img.shields.io/badge/IIS%20version-Any-blue)
 ![OS](https://img.shields.io/badge/OS->=%20Windows%202000-blue)
@@ -84,7 +84,7 @@ case "2"
 ## Benefits
 
 - The simpliest page needs only one page variable which is also SQL query
-- The hardest page with full possible functionality You may get using 19 page variables (each variable is query/constraint/hybrid)
+- The hardest page with full possible functionality You may get using 21 page variables (each variable is query/constraint/hybrid)
 
 ## Limitations
 
@@ -172,6 +172,10 @@ Pages variables describe one separate page data and functionality.
 - g_DBTableMultipleDropdownsFieldsForInsert -  Is part of g_DBTableDropdownsForInsertUpdate variable. Example: `idcolname1,idcolname2`. List of these values will be repeated N times while inserting rows - Multiinsert. Can be used only on ADD/INSERT operation. 
   
 - g_TableUpdateInsertLayoutVerticalHorizontal - For Operations Update and Insert data layout vertical or horisontal (V/H). For tables containing more than 10 columns, may be very useful	
+
+- g_AfterInsertScript - script or query will be executed after each insert operation and on multiple inserts also
+
+- g_AfterUpdateScript - script or query will be executed after each update operation
 
 ## Debug
 
