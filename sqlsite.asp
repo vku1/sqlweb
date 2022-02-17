@@ -44,7 +44,7 @@ dim g_MENU ' global variable for menu.
 ' (Page_Name_without_submenu_items):Page_code;
 ' [Page_Name_with_submenu_items]:{First_submenu_item_name}:page_code_of_first_submenu:{Second_submenu_item_name}:page_code_of_second_submenu;
 	g_MENU = ""
-	g_MENU = g_MENU & "(Excel file):TT;"
+	g_MENU = g_MENU & "[Excel]:EXL_YOUTUBE:{Excel for Youtube};"
 	g_MENU = g_MENU & "(Access db):AC;"
 	g_MENU = g_MENU & "(SQLite db):SQ;"
 	g_MENU = g_MENU & "[MSSQL Statistics]:1:{Years}:2:{Departments}:3:{Monthly by the department}:4:{Purchase orders};"
@@ -153,6 +153,18 @@ dim g_ApplySubtotalsForNumericColumns
 
 ' /---- Global variable for sharing operation type on record Insert/Update/Delete 
 Dim g_OperationTypeInsertUpdate 
+	 ' i - insert (add new), e - edit row, d - delete row
+	Select  Case Request.QueryString("op") 
+			Case "i"
+				g_OperationTypeInsertUpdate = "INSERT"
+			Case "e" 
+				g_OperationTypeInsertUpdate = "UPDATE"
+			Case "d" 
+				g_OperationTypeInsertUpdate = "DELETE"	
+			Case else
+				g_OperationTypeInsertUpdate = ""
+	End Select
+
 ' \---------------------------- 
 
 ' / -------- Page Global variables -------------
@@ -175,8 +187,10 @@ Dim g_DBTableDropdownsForInsertUpdate            ' default type for Dropdown is 
 Dim g_DBTableDatalistsForInsertUpdate            ' change default tag construction from <select><option> to <input list><datalist><option> which support search in it. Very good for long lists.
 Dim g_DBTableMultipleDropdownsFieldsForInsert    ' List of these values will be repeated N times while inserting rows
 Dim g_TableUpdateInsertLayoutVerticalHorizontal	 ' For Operations Update and Insert data layout vertical or horisontal (V/H). For tables containing more than 10 columns, may be very useful
+Dim g_AfterInsertScript							' script will be executed after main insert done
+Dim g_AfterUpdateScript							' script will be executed after main update done					
+Dim g_DBTableIdColumnValue						' VALUE OF TABLE id COLUMN WHILE MAKING UPDATE OR DELETE operation
 ' \ --------------------------------------------	
-
 ' /--------- Global Variables - Dropdown in top of menu which selected value will be automatically applied to all filters and datatables
 ' for each variable will be created session variable with value selected  by the user
 ' after selecting value, you will be redirected to main menu and value will be used in url string+in session variable; 
@@ -195,26 +209,25 @@ Dim g_GlobalVariablesValues
 
 SELECT CASE cstr(page)
 
-	CASE "TT" ' -- this page code is "TT". This info you use to create valid menu in g_MENU variable. 
-		g_page_datasource = "Excel_test"
-		g_Table_Caption_and_Info = "Data based on Excel file"
+	CASE "EXL_YOUTUBE" 
+		g_page_datasource = "Excel_test_for_youtube"
+		g_Table_Caption_and_Info = "Data based on Excel random file from web"
 		g_Form_Info_Help = "Excel datasource test"	
 		        
-        g_SQL = "select m2.[num],m2.[FirstName],m2.[LastName],m2.[Occupation],c.[Country],m2.[Age],m2.[Date1],m2.[Id] from " 
-		g_SQL = g_SQL & "(select a.[num],a.[FirstName],a.[LastName],b.[Occupation],a.[Age],a.[Date1],a.[Id],a.countryid from (select * from [Sheet1$]) as a " 
-		g_SQL = g_SQL & " left join (select * from [Sheet2$]) as b on a.[Occupationid]=b.[Occupationid] ) as m2"
-		g_SQL = g_SQL & " left join (select * from [Sheet3$]) as c on m2.[countryid]=c.[countryid] "
+        g_SQL = " select * from [Country Codes$] " 
+		'g_SQL = g_SQL & "(select a.[num],a.[FirstName],a.[LastName],b.[Occupation],a.[Age],a.[Date1],a.[Id],a.countryid from (select * from [Sheet1$]) as a " 
+		'g_SQL = g_SQL & " left join (select * from [Sheet2$]) as b on a.[Occupationid]=b.[Occupationid] ) as m2"
+		'g_SQL = g_SQL & " left join (select * from [Sheet3$]) as c on m2.[countryid]=c.[countryid] "
         		
 		g_FilterDropdownsAllowed = "YES"
-		g_FilterDropdownsColumns = "select '%' as country,'All' as CountryName         from [Sheet3$] where countryid=1     union select Country,Country as CountryName            from (select Country from [Sheet3$] group by country order by country) as x;" _
-		                         & "select '%' as Occupation, 'All' as OccupationName  from [Sheet2$] where Occupationid=1  union select Occupation, Occupation as OccupationName  from (select Occupation from [Sheet2$] group by Occupation order by Occupation) as x"
+		g_FilterDropdownsColumns = "select '%' as c_code,'All' as CountryName from [Country Codes$] where C_Code='ABW' union select C_Code,C_Name as CountryName from [Country Codes$]"
 		g_FilterDatalistsColumns = ""					   
-		g_FiltersDefaultValues = "select '%' as country,'%' as Occupation from [Sheet1$] where id=1"
+		g_FiltersDefaultValues = "select '%' as c_code from [Country Codes$] where C_Code='ABW' "
 		
 		g_TableColumnsSortingAllowed = "YES" 
-		g_TableColumnsDefaultSorting = "id asc"
+		g_TableColumnsDefaultSorting = "c_code asc"
         
-	    g_TableRowsUpdateAllowed = "YES" : g_TableRowsInsertAllowed  = "NO" : g_TableRowsDeleteAllowed = "NO"
+	    g_TableRowsUpdateAllowed = "NO" : g_TableRowsInsertAllowed  = "NO" : g_TableRowsDeleteAllowed = "NO"
 		g_DBTableForInsertUpdate="[Sheet1$]"
 		g_DBTableIdColumn="id"
 		g_DBTableFieldsListForInsertUpdate="[num],[FirstName],[LastName],[OccupationId],[CountryId],[Age],[Date1]"
@@ -511,6 +524,49 @@ Sub debug_write (in_msg,in_termination_flag)
 	end if
 End Sub
 
+Function RunScript(in_sql)
+
+    call debug_write ("Execute Script Code: len=" & len(in_sql) & " code=" & in_sql,"")
+	on error resume next
+	
+	Dim cn,cns
+	Dim msg_
+	
+    Set cn  = CreateObject("ADODB.Connection")
+		cns = Application(g_page_datasource)
+	cn.open cns
+	cn.execute(in_sql)
+	cn.close
+	set cn = nothing
+
+	if err.number=0 then
+		msg_ = "" 
+		call debug_write("Execute Script Result: Done without Errors","")
+	else
+		msg_ = "Error: " & err.description '"Error: " & err.number & " " & err.description & " " & in_sql 
+		call debug_write("Execute Script Result: " & msg_ ,"")
+	end if
+	
+	RunScript=msg_
+
+End Function
+
+Function execute_SCRIPT(in_sql)
+
+	dim out_ , arr_ , trash_
+	arr_ = split(in_sql,";")
+	for i=0 to ubound(arr_)
+		if arr_(i)<>"" and arr_(i)<>vbcrlf then
+			trash_ = RunScript(arr_(i))
+			out_ = out_ & trash_ & vbcrlf
+			if g_OperationTypeInsertUpdate="INSERT" and g_AfterInsertScript<>"" and trash_="" then trash_ = RunScript(g_AfterInsertScript)' if main insert operation done without errors we proceed with an event script
+			if g_OperationTypeInsertUpdate="UPDATE" and g_AfterUpdateScript<>"" and trash_="" then trash_ = RunScript(g_AfterUpdateScript)' if main update operation done without errors we proceed with an event script
+		end if
+	next 	
+
+	execute_SCRIPT = out_
+	
+End Function						  
 Function func_InfoHelpHTML()
 
 	' ### Message on page which will be opened after click on "Info/Help" menu item
@@ -558,26 +614,16 @@ End Function
 
 Function func_CreateTableHTML()  
 	
-	Dim page_ret_
+	Dim page_ret_  
 	dim prc
 	
 	prc = CInt( NVL( request.querystring("prc") ,"1") )
-	id_value = Request.QueryString("iv")
+	g_DBTableIdColumnValue = Request.QueryString("iv")
 	
-	 ' i - insert (add new), e - edit row
-	Select  Case Request.QueryString("op") 
-			Case "i"
-				g_OperationTypeInsertUpdate = "INSERT"
-			Case "e" 
-				g_OperationTypeInsertUpdate = "UPDATE"
-			Case "d" 
-				g_OperationTypeInsertUpdate = "DELETE"	
-			Case else
-				g_OperationTypeInsertUpdate = ""
-	End Select
+	 ' i - insert (add new), e - edit row					   
 
 	action = Request.QueryString("a")          ' a - start action if it is initiated, mean button submit pressed after update/insert/delete row
-	call debug_write ("func_CreateTableHTML: id_value=" & id_value & " g_OperationTypeInsertUpdate=" & g_OperationTypeInsertUpdate & " action=" & action,"")
+	call debug_write ("func_CreateTableHTML: g_DBTableIdColumnValue=" & g_DBTableIdColumnValue & " g_OperationTypeInsertUpdate=" & g_OperationTypeInsertUpdate & " action=" & action,"")
 	
 	if action="a" then
 
@@ -586,11 +632,11 @@ Function func_CreateTableHTML()
 			page_ret_ = page_ret_ & execute_SCRIPT(INSERT_SQL)
 		end if	
 		if g_OperationTypeInsertUpdate="UPDATE" and g_TableRowsUpdateAllowed="YES" then 
-			UPDATE_SQL=func_CreateInsertUpdateStatementFromFormValues(g_DBTableForInsertUpdate, func_CheckIfBracketsQuotesNeeded(g_DBTableIdColumn) & "=" & id_value) 
+			UPDATE_SQL=func_CreateInsertUpdateStatementFromFormValues(g_DBTableForInsertUpdate, func_CheckIfBracketsQuotesNeeded(g_DBTableIdColumn) & "=" & g_DBTableIdColumnValue) 
 			page_ret_ = page_ret_ & execute_SCRIPT(UPDATE_SQL)
 		end if	
 		if g_OperationTypeInsertUpdate="DELETE" and g_TableRowsDeleteAllowed="YES" then 
-			DELETE_SQL=func_CreateInsertUpdateStatementFromFormValues(g_DBTableForInsertUpdate, func_CheckIfBracketsQuotesNeeded(g_DBTableIdColumn) & "=" & id_value) 
+			DELETE_SQL=func_CreateInsertUpdateStatementFromFormValues(g_DBTableForInsertUpdate, func_CheckIfBracketsQuotesNeeded(g_DBTableIdColumn) & "=" & g_DBTableIdColumnValue) 
 			page_ret_ = page_ret_ & execute_SCRIPT(DELETE_SQL)
 		end if	
 		page_ret_ = page_ret_ &  "<a href='"& page_name &"?p=" & page & "&prc=" & prc & "'>Return to form</a><br>"
@@ -606,7 +652,7 @@ Function func_CreateTableHTML()
 
 			   case "UPDATE","DELETE"
 					if g_TableRowsUpdateAllowed="YES" then
-						page_ret_ = page_ret_ & edit_rowRS("Edit Record<br><br>" & g_Table_Caption_and_Info,id_value,g_DBTableFieldsListForInsertUpdate,g_DBTableDropdownsForInsertUpdate)
+						page_ret_ = page_ret_ & edit_rowRS("Edit Record<br><br>" & g_Table_Caption_and_Info,g_DBTableIdColumnValue,g_DBTableFieldsListForInsertUpdate,g_DBTableDropdownsForInsertUpdate)
 					end if	
 					
 				case else
@@ -831,30 +877,6 @@ Function func_GetGlobalFilter(in_rs)
 		
 End Function
 
-Function execute_SCRIPT(in_sql)
-
-    call debug_write ("Execute Script: " & in_sql,"")
-	on error resume next
-
-	Dim cn,cns
-	Dim msg_
-    Set cn  = CreateObject("ADODB.Connection")
-		cns = Application(g_page_datasource)
-	cn.open cns
-	cn.execute(in_sql)
-	cn.close
-	set cn = nothing
-
-	if err.number=0 then
-		msg_ = "<br>Done without errors.<br> " 
-	else
-		msg_ = "Error: " & err.number & " " & err.description & " " & in_sql
-	end if
-	call debug_write("execute_SCRIPT: " & msg_,"")
-	execute_SCRIPT = msg_
-	
-End Function
-
 Function func_CreateInsertUpdateStatementFromFormValues(in_table,where_statement)
     
 	dim line_a
@@ -912,7 +934,9 @@ Function func_CreateInsertUpdateStatementFromFormValues(in_table,where_statement
 					values_ = values_ & "NULL" & "|"
 					fieldName = mid(Item,1,len(Item)-1)
 					tmplt_a = tmplt_a & func_CheckIfBracketsQuotesNeeded(fieldName) & ","
-					tmplt_b = tmplt_b & "NULL," 
+					'tmplt_b = tmplt_b & "NULL," 
+					fieldValue = x_
+					tmplt_b = tmplt_b & fieldValue & "," 
 				
 				end if
 				
@@ -952,13 +976,31 @@ Function func_CreateInsertUpdateStatementFromFormValues(in_table,where_statement
 			next
 			
 			' output array normalisation. deleting null lines and lines containing '#" signs which is abnormal 
+			dim arr_2,prev_arr
 			res_=""
-			arr_=split(out_,vbcrlf)
+			arr_2=split(out_,vbcrlf)
+			for i=0 to ubound(arr_2)
+				'call debug_write("arr_(" & i & ")={" & arr_2(i) & "}" & " len(arr_2)=" & len(arr_2(i)),"" )
+				if len(arr_2(i))<>0 and instr(arr_2(i),"#")=0 then 
+					'call debug_write("level 2","" )
+					if arr_2(i) <> prev_arr then 
+						'call debug_write("level 3","" )
+						res_=res_ & arr_2(i) & vbcrlf
+						prev_arr = arr_2(i)
+					end if	
+				end if	
+			next
+			if right(res_,2)=vbcrlf then res_=mid(res_,1,len(res_)-2)
+			
+			arr_ = split(res_,vbcrlf)
 			for i=0 to ubound(arr_)
+				
+				'call debug_write("arr_(" & i & ")={" & arr_(i) & "}" & " len(arr_)=" & len(arr_(i)),"" )
+				
 				if instr(arr_(i),"#")<>0 or len(arr_(i))=0 then 
 					'res_=res_ 
 				else 
-					res_=res_ & arr_(i) & vbcrlf ' Potential BUG if multiple values dropdown item contain ', ' or '#' signs
+					'res_=res_ & arr_(i) & vbcrlf ' Potential BUG if multiple values dropdown item contain ', ' or '#' signs
 					ret_ = ret_ & "Insert into " & in_table & " (" & tmplt_a & ") values (" & arr_(i) & ");" & vbcrlf
 					
 				end if	
@@ -997,7 +1039,15 @@ Function func_CreateInsertUpdateStatementFromFormValues(in_table,where_statement
 				
 				line_a = line_a & func_CheckIfBracketsQuotesNeeded(fieldName) & "=" & fT &  replace(fieldValue,fT,fT&fT) & fT & "," ' fieldValue -> replace(fieldValue,fT,fT&fT)  quote replced with doublequotes
 				
+				' this part integrate replacement of #param# parameters in g_AfterUpdateScript 
+				if g_AfterUpdateScript<>"" then 
+					g_AfterUpdateScript=replace(g_AfterUpdateScript,"#" & fieldName & "#", fT &  replace(fieldValue,fT,fT&fT) & fT)
+				end if	
+				
 			Next 
+			if g_AfterUpdateScript<>"" then 
+				g_AfterUpdateScript=replace(g_AfterUpdateScript,"#" & g_DBTableIdColumn & "#", g_DBTableIdColumnValue)
+			end if
 			
 			if line_a<>"" then line_a = mid(line_a,1,len(line_a)-1)
 			if line_b<>"" then line_b = mid(line_b,1,len(line_b)-1)
@@ -1605,6 +1655,7 @@ on error resume next
 	
 	if dd_found="" then exit function
 	
+	call debug_write ("func_GetFilterDropdownsIfExist: dd_type=" & dd_type & " dd_found=" & dd_found & " filter_=" & filter_,"") ' dropdowns debug
     Set rs1 = CreateObject("ADODB.Recordset")
 	cn1=Application(g_page_datasource)
 
@@ -1674,11 +1725,11 @@ Function rs_field_type(in_value)
 		case 6 ret_="0"'A currency value adCurrency
 		case 7 ret_="2"'The number of days since December 30, 1899 + the fraction of a day. adDate ' Date in MS Access
 		case 8 ret_="1"'A null-terminated character string. adBSTR
-		case 9 ret_="0"'A pointer to an IDispatch interface on a COM object. Note: Currently not supported by ADO. adIDispatch
+		case 9 ret_="0"'A pointer to an IDispatch interface on a COM object. Note: Currently not supported by ADO. adIDispatch
 		case 10 ret_="0"'A 32-bit error code adError
 		case 11 ret_="0"'A boolean value. adBoolean
-		case 12 ret_="0"'An Automation Variant. Note: Currently not supported by ADO. adVariant
-		case 13 ret_="0"'A pointer to an IUnknown interface on a COM object. Note: Currently not supported by ADO. adIUnknown
+		case 12 ret_="0"'An Automation Variant. Note: Currently not supported by ADO. adVariant
+		case 13 ret_="0"'A pointer to an IUnknown interface on a COM object. Note: Currently not supported by ADO. adIUnknown
 		case 14 ret_="0"'An exact numeric value with a fixed precision and scale. adDecimal
 		case 16 ret_="0"'A 1-byte signed integer. adTinyInt
 		case 17 ret_="0"'A 1-byte unsigned integer. adUnsignedTinyInt
@@ -1698,12 +1749,12 @@ Function rs_field_type(in_value)
 		case 135 ret_="3"'A date/time stamp (yyyymmddhhmmss plus a fraction in billionths). adDBTimeStamp
 		case 136 ret_="1"'A 4-byte chapter value that identifies rows in a child rowset adChapter
 		case 138 ret_="0"'An Automation PROPVARIANT. adPropVariant
-		case 139 ret_="0"'A numeric value (Parameter object only). adVarNumeric
-		case 200 ret_="1"'A string value (Parameter object only). adVarChar
+		case 139 ret_="0"'A numeric value (Parameter object only). adVarNumeric
+		case 200 ret_="1"'A string value (Parameter object only). adVarChar
 		case 201 ret_="1"'A long string value. adLongVarChar
 		case 202 ret_="1"'A null-terminated Unicode character string. adVarWChar
 		case 203 ret_="1"'A long null-terminated Unicode string value. adLongVarWChar
-		case 204 ret_="1"'A binary value (Parameter object only). adVarBinary
+		case 204 ret_="1"'A binary value (Parameter object only). adVarBinary
 		case 205 ret_="1"'A long binary value. adLongVarBinary
 		case 0x2000 ret_="1"'A flag value combined with another data type constant. Indicates an array of that other data type. AdArray
 	end select
@@ -1723,11 +1774,11 @@ Function rs_field_db_type(in_value,in_name)
 		case 6 ret_="number"'A currency value adCurrency
 		case 7 ret_="date"'The number of days since December 30, 1899 + the fraction of a day. adDate ' Date in MS Access
 		case 8 ret_="text"'A null-terminated character string. adBSTR
-		case 9 ret_="number"'A pointer to an IDispatch interface on a COM object. Note: Currently not supported by ADO. adIDispatch
+		case 9 ret_="number"'A pointer to an IDispatch interface on a COM object. Note: Currently not supported by ADO. adIDispatch
 		case 10 ret_="number"'A 32-bit error code adError
 		case 11 ret_="number"'A boolean value. adBoolean
-		case 12 ret_="number"'An Automation Variant. Note: Currently not supported by ADO. adVariant
-		case 13 ret_="number"'A pointer to an IUnknown interface on a COM object. Note: Currently not supported by ADO. adIUnknown
+		case 12 ret_="number"'An Automation Variant. Note: Currently not supported by ADO. adVariant
+		case 13 ret_="number"'A pointer to an IUnknown interface on a COM object. Note: Currently not supported by ADO. adIUnknown
 		case 14 ret_="number"'An exact numeric value with a fixed precision and scale. adDecimal
 		case 16 ret_="number"'A 1-byte signed integer. adTinyInt
 		case 17 ret_="number"'A 1-byte unsigned integer. adUnsignedTinyInt
@@ -1747,12 +1798,12 @@ Function rs_field_db_type(in_value,in_name)
 		case 135 ret_="datetime-local"'A date/time stamp (yyyymmddhhmmss plus a fraction in billionths). adDBTimeStamp
 		case 136 ret_="text"'A 4-byte chapter value that identifies rows in a child rowset adChapter
 		case 138 ret_="number"'An Automation PROPVARIANT. adPropVariant
-		case 139 ret_="number"'A numeric value (Parameter object only). adVarNumeric
-		case 200 ret_="text"'A string value (Parameter object only). adVarChar
+		case 139 ret_="number"'A numeric value (Parameter object only). adVarNumeric
+		case 200 ret_="text"'A string value (Parameter object only). adVarChar
 		case 201 ret_="text"'A long string value. adLongVarChar
 		case 202 ret_="text"'A null-terminated Unicode character string. adVarWChar
 		case 203 ret_="text"'A long null-terminated Unicode string value. adLongVarWChar
-		case 204 ret_="text"'A binary value (Parameter object only). adVarBinary
+		case 204 ret_="text"'A binary value (Parameter object only). adVarBinary
 		case 205 ret_="text"'A long binary value. adLongVarBinary
 		case 0x2000 ret_="text"'A flag value combined with another data type constant. Indicates an array of that other data type. AdArray
 	end select
