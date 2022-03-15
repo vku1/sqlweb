@@ -6,8 +6,15 @@
 ![IIS](https://img.shields.io/badge/IIS%20version-Any-blue)
 ![OS](https://img.shields.io/badge/OS->=%20Windows%202000-blue)
 
-This is framework to create web site by using only SQL queries. 
-A solution for quickly creating sites as single page applications (all in one),  includes reports with filters, create or change forms.
+- A solution for quickly creating sites as single page applications (all in one),  includes reports with filters, create or change forms, menu. 
+
+- The framework is primarily intended for those who have a database, but do not have a web interface to it.
+
+- Logic is based on SQL queries and variables. 
+
+- The user cannot change the design and layout of the elements, but has full control over the content and data source.
+
+- The video on YouTube shows a simple report creation, where the database is an excel document.
 
 ## Sample Page and Code
 
