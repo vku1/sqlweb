@@ -7,8 +7,7 @@
 ![OS](https://img.shields.io/badge/OS->=%20Windows%202000-blue)
 
 This is framework to create web site by using only SQL queries. 
-
-If you have never created a front-end to databases or reports for the web before, then it's time to try it with this framework.
+A solution for quickly creating sites as single page applications (all in one),  includes reports with filters, create or change forms.
 
 ## Sample Page and Code
 
