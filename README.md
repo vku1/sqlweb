@@ -16,6 +16,8 @@
 
 - The video on YouTube shows a simple report creation, where the database is an excel document.
 
+- All logic is written in ASP Classic, design elements are written in pure html/javascript/css. No additional javascrit libraries are used.
+
 ## Sample Page and Code
 
 **Page**
